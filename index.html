@@ -21,6 +21,7 @@
         body {
             background-color: var(--bg-dark); color: var(--text-light); min-height: 100vh; overflow-x: hidden;
             background-image: radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 40%), radial-gradient(circle at 90% 80%, rgba(212, 175, 55, 0.08) 0%, transparent 40%), url('https://www.transparenttextures.com/patterns/dark-matter.png');
+            display: flex; flex-direction: column; /* لضمان بقاء الفوتر بالأسفل */
         }
         
         .viking-title, .card-balance, .store-price, .account-number, .amount-text { font-family: 'Cinzel', serif; letter-spacing: 1px; }
@@ -36,14 +37,14 @@
         @keyframes loadProgress { 100% { width: 100%; } }
 
         /* === الهيكل العام للشاشات === */
-        .screen { min-height: 100vh; display: none; flex-direction: column; align-items: center; justify-content: flex-start; padding: 20px; opacity: 0; transition: opacity 0.5s ease; max-width: 1200px; margin: 0 auto; }
+        .screen { flex: 1; width: 100%; display: none; flex-direction: column; align-items: center; justify-content: flex-start; padding: 40px 20px; opacity: 0; transition: opacity 0.5s ease; max-width: 1200px; margin: 0 auto; }
         .screen.active { display: flex; opacity: 1; }
         #login-screen { justify-content: center; }
         #dashboard-screen { align-items: stretch; display: none; opacity: 0; transition: opacity 0.6s ease; padding: 20px 5%; max-width: 1200px; margin: 0 auto; }
         #dashboard-screen.active { display: block; opacity: 1; }
 
         /* === شاشة الدخول والتسجيل === */
-        .login-card { background: var(--glass-bg); backdrop-filter: blur(20px); border: 2px solid var(--glass-border); border-radius: var(--viking-radius); padding: 50px 40px; width: 100%; max-width: 480px; text-align: center; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(212,175,55,0.05); position: relative; }
+        .login-card { background: var(--glass-bg); backdrop-filter: blur(20px); border: 2px solid var(--glass-border); border-radius: var(--viking-radius); padding: 50px 40px; width: 100%; max-width: 480px; text-align: center; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(212,175,55,0.05); position: relative; margin: auto;}
         .login-card::before { content: ''; position: absolute; top: -2px; left: 20%; width: 60%; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
         .login-card h2 { color: var(--gold); font-size: 2.2rem; margin-bottom: 25px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
         
@@ -64,8 +65,10 @@
         .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4); filter: brightness(1.1); }
         .btn-secondary { width: 100%; padding: 16px; background: rgba(0,0,0,0.4); border: 1px solid var(--gold-dark); border-radius: var(--viking-radius-btn); color: var(--gold); font-size: 1.05rem; font-weight: 900; cursor: pointer; transition: var(--transition); }
         .btn-secondary:hover { background: rgba(212,175,55,0.1); border-color: var(--gold); transform: translateY(-3px); }
+        
         .btn-danger { background: linear-gradient(135deg, #8a0303, #dc2626); color: white; border:none; padding:10px 15px; border-radius:var(--viking-radius-btn); cursor:pointer; font-weight:bold;}
         .btn-success { background: linear-gradient(135deg, #064e3b, #10b981); color: white; border:none; padding:10px 15px; border-radius:var(--viking-radius-btn); cursor:pointer; font-weight:bold;}
+        .btn-warning { background: linear-gradient(135deg, #b45309, #f59e0b); color: white; border:none; padding:10px 15px; border-radius:var(--viking-radius-btn); cursor:pointer; font-weight:bold;}
 
         /* === واجهة البنك === */
         .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px; margin-top: 15px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.03); }
@@ -137,7 +140,6 @@
         .admin-tab-btn.active { background: linear-gradient(135deg, #8a0303, var(--danger)); color: white; border-color: var(--danger); box-shadow: 0 5px 15px rgba(201,24,74,0.3); }
         .admin-tab-content { display: none; width: 100%; background: var(--bg-panel); padding: 30px; border-radius: var(--viking-radius); border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
         .admin-tab-content.active { display: block; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
         
         .admin-table { width: 100%; border-collapse: collapse; text-align: right; min-width: 700px; }
         .admin-table th, .admin-table td { padding: 18px 15px; border-bottom: 1px solid rgba(255,255,255,0.03); }
@@ -171,6 +173,16 @@
         .sum-box span { display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 5px; }
         .sum-box strong { font-size: 1.4rem; font-family: 'Cinzel', serif; }
 
+        /* === الحقوق والفوتر === */
+        .global-footer {
+            text-align: center; padding: 40px 20px 20px 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+            width: 100%; position: relative; z-index: 10; margin-top: auto;
+        }
+        .guild-name { color: var(--gold); font-size: 1.15rem; font-weight: 900; margin-bottom: 5px; text-shadow: 0 0 15px rgba(212,175,55,0.3); letter-spacing: 1px; }
+        .dev-name { color: var(--text-muted); font-size: 0.9rem; }
+        .dev-name span { color: var(--danger); font-weight: 900; letter-spacing: 1px; text-shadow: 0 0 10px rgba(201, 24, 74, 0.4); }
+
         /* مؤشر التزامن السحابي */
         #sync-status {
             position: fixed; bottom: 15px; left: 15px; background: rgba(0,0,0,0.7); 
@@ -182,8 +194,10 @@
 </head>
 <body>
 
+    <!-- مؤشر التزامن السحابي -->
     <div id="sync-status">جاري الاتصال بالسحابة... ⏳</div>
 
+    <!-- === شاشة التحميل === -->
     <div id="loader">
         <div class="axe-logo">
             <svg viewBox="0 0 100 100"><path d="M45,10 L55,10 L55,90 L45,90 Z M45,30 C20,20 10,40 10,50 C10,60 20,80 45,70 Z M55,30 C80,20 90,40 90,50 C90,60 80,80 55,70 Z" /><circle cx="50" cy="50" r="5" fill="var(--bg-dark)"/></svg>
@@ -193,7 +207,8 @@
         <p style="color:var(--gold); margin-top:15px; font-size:0.9rem;" id="loader-msg">يتم استدعاء السجلات من السحابة...</p>
     </div>
 
-    <div id="login-screen" class="screen">
+    <!-- === شاشة الدخول والتسجيل === -->
+    <div id="login-screen" class="screen active">
         <div class="login-card">
             <h2 class="viking-title">بنك الفايكنج</h2>
             
@@ -203,6 +218,7 @@
                 <div class="auth-tab" onclick="toggleAuth('check')">حالة الطلب</div>
             </div>
 
+            <!-- 1. نموذج الدخول -->
             <div id="form-login" class="auth-form active">
                 <div class="input-group">
                     <label>الاسم أو اللقب</label>
@@ -215,6 +231,7 @@
                 <button class="btn-primary" onclick="handleLogin()">دخول قاعة المجد ⚔️</button>
             </div>
 
+            <!-- 2. نموذج طلب انضمام -->
             <div id="form-signup" class="auth-form">
                 <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:15px;">أرسل طلب انضمام لزعماء الفايكنج، وسيتم توليد هوية فريدة لك عند الموافقة.</p>
                 <div class="input-group">
@@ -228,6 +245,7 @@
                 <button class="btn-secondary" onclick="handleSignup()">إرسال طلب الانضمام 📜</button>
             </div>
 
+            <!-- 3. نموذج الاستعلام عن حالة الطلب -->
             <div id="form-check" class="auth-form">
                 <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:15px;">استعلم برقم هاتفك لتعرف إذا تم قبولك ولتحصل على رقم هويتك (الرقم السري).</p>
                 <div class="input-group">
@@ -241,6 +259,7 @@
         </div>
     </div>
 
+    <!-- === القائمة الجانبية === -->
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
     <div class="sidebar" id="sidebar">
         <button class="close-sidebar" onclick="closeSidebar()">✖</button>
@@ -256,6 +275,7 @@
         <button class="logout-side-btn" onclick="handleLogout()">الانسحاب من القاعة (خروج)</button>
     </div>
 
+    <!-- === واجهة البنك === -->
     <div id="dashboard-screen" class="screen">
         <header class="top-nav">
             <div class="nav-right">
@@ -309,6 +329,7 @@
         </section>
     </div>
 
+    <!-- === المتجر === -->
     <div id="store-screen" class="screen">
         <div class="store-header">
             <h2 class="viking-title">متجر فالهالا 🛒</h2>
@@ -318,6 +339,7 @@
         <div class="store-grid" id="store-grid"></div>
     </div>
 
+    <!-- === شاشة الإدارة (Super Admin) === -->
     <div id="admin-screen" class="screen">
         <div class="admin-header" style="border-bottom: 2px solid var(--danger);">
             <h2 class="viking-title" style="color:var(--danger);">قاعة الإدارة العليا 👑</h2>
@@ -402,6 +424,7 @@
         </div>
     </div>
 
+    <!-- === النوافذ المنبثقة للعمليات === -->
     <div class="modal" id="inventoryModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -540,6 +563,12 @@
         </div>
     </div>
 
+    <!-- === الحقوق === -->
+    <footer class="global-footer">
+        <div class="guild-name">🛡️ هذا البنك تابع لنقابة فالهالا 🛡️</div>
+        <div class="dev-name">برمجة وتطوير: <span>لابوبو</span></div>
+    </footer>
+
     <script>
         // === 1. الربط بقاعدة بيانات Google Sheets ===
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzU_T7m1SKvFqw78yR_eZvLMEax1l6LwS5j7lxEnSHoNwSKAO_nhphsupZH9SVaBXRDIw/exec';
@@ -547,7 +576,6 @@
         let db = { users: [], categories: [], items: [], requestsHistory: [], transactions: [], accountRequests: [] };
         let currentUser = null;
 
-        // دالة سحب البيانات من السحابة (جوجل شيت)
         async function loadDB() {
             try {
                 const response = await fetch(SCRIPT_URL);
@@ -558,10 +586,8 @@
                     
                     if(data.users) {
                         db.users = data.users.map(u => ({
-                            id: u["رقم الهوية"]?.toString() || "",
-                            name: u["الاسم"] || "",
-                            balance: Number(u["الرصيد"]) || 0,
-                            debt: Number(u["الديون"]) || 0,
+                            id: u["رقم الهوية"]?.toString() || "", name: u["الاسم"] || "",
+                            balance: Number(u["الرصيد"]) || 0, debt: Number(u["الديون"]) || 0,
                             inventory: (typeof u["الممتلكات"] === 'string' ? JSON.parse(u["الممتلكات"] || '[]') : u["الممتلكات"]) || []
                         }));
                     }
@@ -574,40 +600,27 @@
                     }
                     
                     if(data.storeItems) {
-                        db.items = data.storeItems.map(i => ({
-                            id: i["رقم السلعة"], catId: i["القسم"], icon: i["الأيقونة"],
-                            name: i["الاسم"], desc: i["الوصف"], price: Number(i["السعر"]) || 0
-                        }));
+                        db.items = data.storeItems.map(i => {
+                            let rawName = i["الاسم"] || "";
+                            let isHidden = false;
+                            if(rawName.includes("||مخفي||")) { isHidden = true; rawName = rawName.replace("||مخفي||", "").trim(); }
+                            return { id: i["رقم السلعة"], catId: i["القسم"], icon: i["الأيقونة"], name: rawName, desc: i["الوصف"], price: Number(i["السعر"]) || 0, isHidden: isHidden };
+                        });
                     }
                     
                     if(data.bankRequests) {
                         db.requestsHistory = data.bankRequests.map(r => {
-                            let req = {
-                                id: r["رقم الطلب"], userId: r["رقم الهوية"]?.toString() || "", userName: r["اسم العضو"],
-                                type: r["نوع الطلب"], amount: Number(r["المبلغ"]) || 0, status: r["الحالة"], date: r["التاريخ"]
-                            };
-                            
-                            // استخراج التفاصيل حسب نوع الطلب
+                            let req = { id: r["رقم الطلب"], userId: r["رقم الهوية"]?.toString() || "", userName: r["اسم العضو"], type: r["نوع الطلب"], amount: Number(r["المبلغ"]) || 0, status: r["الحالة"], date: r["التاريخ"] };
                             if(r["نوع الطلب"] === 'purchase') {
-                                try {
-                                    let parsed = JSON.parse(r["التفاصيل"]);
-                                    req.itemName = parsed.itemName; req.itemIcon = parsed.itemIcon; req.itemDesc = parsed.itemDesc;
-                                    req.title = `طلب صياغة: ${req.itemName}`;
-                                } catch(e) {
-                                    req.itemName = r["التفاصيل"]; req.title = `طلب صياغة: ${r["التفاصيل"]}`;
-                                }
-                            } else {
-                                req.reason = r["التفاصيل"]; req.title = 'طلب تمويل (دين)';
-                            }
+                                try { let parsed = JSON.parse(r["التفاصيل"]); req.itemName = parsed.itemName; req.itemIcon = parsed.itemIcon; req.itemDesc = parsed.itemDesc; req.title = `طلب صياغة: ${req.itemName}`; } 
+                                catch(e) { req.itemName = r["التفاصيل"]; req.title = `طلب صياغة: ${r["التفاصيل"]}`; }
+                            } else { req.reason = r["التفاصيل"]; req.title = 'طلب تمويل (دين)'; }
                             return req;
                         });
                     }
                     
                     if(data.transactions) {
-                        db.transactions = data.transactions.map(t => ({
-                            id: t["رقم العملية"], userId: t["رقم الهوية"]?.toString() || "", type: t["نوع العملية"],
-                            amount: Number(t["المبلغ"]) || 0, title: t["الوصف"], date: t["التاريخ"]
-                        }));
+                        db.transactions = data.transactions.map(t => ({ id: t["رقم العملية"], userId: t["رقم الهوية"]?.toString() || "", type: t["نوع العملية"], amount: Number(t["المبلغ"]) || 0, title: t["الوصف"], date: t["التاريخ"] }));
                     }
                 }
             } catch(e) {
@@ -615,27 +628,23 @@
                 document.getElementById('loader-msg').innerText = "حدث خطأ في جلب السجلات. قد يعمل النظام محلياً مؤقتاً.";
             }
 
-            // استعادة الأقسام محلياً لأنها لم تكن ضمن السكربت (أو استخدام الافتراضي)
             db.categories = JSON.parse(localStorage.getItem('vikingCats')) || [
                 { id: 'cat1', name: 'الأسلحة القتالية' }, { id: 'cat2', name: 'الدروع الفولاذية' }, { id: 'cat3', name: 'أساطيل السفن' }
             ];
         }
 
-        // دالة حفظ البيانات وإرسالها للسحابة (جوجل شيت)
         function saveDB() {
             const syncStatus = document.getElementById('sync-status');
             if(syncStatus) { syncStatus.style.display = 'block'; syncStatus.innerText = '⏳ جاري المزامنة مع السحابة...'; }
             
-            // حفظ الأقسام محلياً
             localStorage.setItem('vikingCats', JSON.stringify(db.categories));
 
-            // ترتيب البيانات لتطابق أعمدة جداول جوجل
             const payload = {
                 action: "sync_db",
                 db: {
                     users: db.users.map(u => ({ "رقم الهوية": u.id, "الاسم": u.name, "الرصيد": u.balance, "الديون": u.debt, "الممتلكات": JSON.stringify(u.inventory) })),
                     accountRequests: db.accountRequests.map(r => ({ "رقم الطلب": r.id, "الاسم": r.name, "رقم الهاتف": r.phone, "الحالة": r.status, "الهوية المولدة": r.generatedId || "", "التاريخ": r.date })),
-                    storeItems: db.items.map(i => ({ "رقم السلعة": i.id, "القسم": i.catId, "الأيقونة": i.icon, "الاسم": i.name, "الوصف": i.desc, "السعر": i.price })),
+                    storeItems: db.items.map(i => ({ "رقم السلعة": i.id, "القسم": i.catId, "الأيقونة": i.icon, "الاسم": i.isHidden ? i.name + " ||مخفي||" : i.name, "الوصف": i.desc, "السعر": i.price })),
                     bankRequests: db.requestsHistory.map(r => ({ "رقم الطلب": r.id, "رقم الهوية": r.userId, "اسم العضو": r.userName, "نوع الطلب": r.type, "التفاصيل": r.type === 'purchase' ? JSON.stringify({itemName: r.itemName, itemIcon: r.itemIcon, itemDesc: r.itemDesc}) : r.reason, "المبلغ": r.amount, "الحالة": r.status, "التاريخ": r.date })),
                     transactions: db.transactions.map(t => ({ "رقم العملية": t.id, "رقم الهوية": t.userId, "نوع العملية": t.type, "المبلغ": t.amount, "الوصف": t.title, "التاريخ": t.date }))
                 }
@@ -647,9 +656,8 @@
             .catch(err => { if(syncStatus) syncStatus.innerText = '🔴 خطأ في الاتصال (المزامنة فشلت)'; });
         }
 
-        // عند فتح الموقع
         window.addEventListener('load', async () => {
-            await loadDB(); // جلب البيانات قبل فتح الموقع
+            await loadDB(); 
             document.getElementById('loader').classList.add('hidden');
             switchScreen('login-screen');
         });
@@ -776,7 +784,7 @@
             saveDB(); alert("تم إرسال طلبك لمجلس الحكماء للموافقة!"); closeModal('loanModal'); document.getElementById('loan-amount').value='';
         }
 
-        // قوائم العضو (الممتلكات - الحالة - السجل)
+        // قوائم العضو
         function renderUserInventory() {
             const list = document.getElementById('user-inventory-list'); list.innerHTML = '';
             if(!currentUser.inventory || currentUser.inventory.length === 0) { list.innerHTML = '<p style="text-align:center; color:var(--text-muted);">خزينتك فارغة من العتاد.</p>'; return; }
@@ -820,7 +828,9 @@
 
             const grid = document.getElementById('store-grid'); grid.innerHTML = '';
             let filteredItems = activeCategory === 'all' ? db.items : db.items.filter(i => i.catId === activeCategory);
-            if(filteredItems.length === 0) { grid.innerHTML = '<p style="color:var(--text-muted); grid-column:1/-1; text-align:center; font-size:1.2rem; padding: 40px;">لا يوجد عتاد في هذا القسم حالياً.</p>'; return; }
+            filteredItems = filteredItems.filter(i => !i.isHidden); // إخفاء السلع
+            
+            if(filteredItems.length === 0) { grid.innerHTML = '<p style="color:var(--text-muted); grid-column:1/-1; text-align:center; font-size:1.2rem; padding: 40px;">لا يوجد عتاد متاح في هذا القسم حالياً.</p>'; return; }
 
             filteredItems.forEach(item => { grid.innerHTML += `<div class="store-item"><div class="store-icon">${item.icon}</div><h3 class="viking-title">${item.name}</h3><p>${item.desc}</p><div class="store-price">${item.price.toLocaleString()} G</div><button class="buy-btn" onclick="requestPurchase(${item.id})">طلب صياغة (شراء) ⚔️</button></div>`; });
         }
@@ -897,14 +907,27 @@
             const tbody = document.getElementById('admin-items-tbody'); tbody.innerHTML = '';
             db.items.forEach(item => {
                 let catName = db.categories.find(c => c.id === item.catId)?.name || 'غير معروف';
-                tbody.innerHTML += `<tr><td style="color:var(--text-muted);">${catName}</td><td style="font-size:2rem; filter:drop-shadow(0 2px 5px rgba(0,0,0,0.5));">${item.icon}</td><td style="font-weight:bold; font-size:1.1rem;">${item.name}</td><td class="amount-text" style="color:var(--gold); font-size:1.2rem;">${item.price.toLocaleString()} G</td><td><button class="btn-danger" style="padding:8px 15px;" onclick="adminDeleteItem(${item.id})">حذف 🗑️</button></td></tr>`;
+                tbody.innerHTML += `<tr>
+                    <td style="color:var(--text-muted);">${catName}</td>
+                    <td style="font-size:2rem; filter:drop-shadow(0 2px 5px rgba(0,0,0,0.5)); opacity:${item.isHidden?'0.5':'1'};">${item.icon}</td>
+                    <td style="font-weight:bold; color:${item.isHidden?'var(--text-muted)':'inherit'};">${item.name} ${item.isHidden?'<br><span style="color:var(--warning);font-size:0.8rem;">(مخفي من المتجر)</span>':''}</td>
+                    <td class="amount-text" style="color:var(--gold); font-size:1.2rem;">${item.price.toLocaleString()} G</td>
+                    <td>
+                        <button class="${item.isHidden ? 'btn-success' : 'btn-warning'}" style="padding:8px 10px; font-size:0.85rem;" onclick="toggleItemVisibility(${item.id})">${item.isHidden ? 'إظهار 👁️' : 'إخفاء 👁️‍🗨️'}</button>
+                        <button class="btn-danger" style="padding:8px 10px; font-size:0.85rem;" onclick="adminDeleteItem(${item.id})">حذف 🗑️</button>
+                    </td>
+                </tr>`;
             });
         }
         function adminAddCategory() { const name = document.getElementById('new-cat-name').value.trim(); if(!name) return; db.categories.push({ id: 'cat' + Date.now(), name: name }); saveDB(); document.getElementById('new-cat-name').value = ''; renderAdminStoreConfigs(); }
         function adminDeleteCat(id) { if(confirm("حذف القسم؟")) { db.categories = db.categories.filter(c => c.id !== id); saveDB(); renderAdminStoreConfigs(); } }
         function adminAddItem() {
             const catId = document.getElementById('new-item-cat').value; const icon = document.getElementById('new-item-icon').value || '🛡️'; const name = document.getElementById('new-item-name').value; const desc = document.getElementById('new-item-desc').value; const price = parseInt(document.getElementById('new-item-price').value);
-            if(!name || !price) return; db.items.push({ id: Date.now(), catId, icon, name, desc, price }); saveDB(); document.getElementById('new-item-name').value = ''; document.getElementById('new-item-price').value = ''; document.getElementById('new-item-desc').value = ''; renderAdminStoreConfigs();
+            if(!name || !price) return; db.items.push({ id: Date.now(), catId, icon, name, desc, price, isHidden: false }); saveDB(); document.getElementById('new-item-name').value = ''; document.getElementById('new-item-price').value = ''; document.getElementById('new-item-desc').value = ''; renderAdminStoreConfigs();
+        }
+        function toggleItemVisibility(id) {
+            let item = db.items.find(i => i.id === id);
+            if(item) { item.isHidden = !item.isHidden; saveDB(); renderAdminStoreConfigs(); }
         }
         function adminDeleteItem(id) { if(confirm("حذف العتاد من المتجر؟")) { db.items = db.items.filter(i => i.id !== id); saveDB(); renderAdminStoreConfigs(); } }
 
@@ -912,7 +935,7 @@
             const tbody = document.getElementById('admin-purchases-tbody'); tbody.innerHTML = '';
             let pendingPurchases = db.requestsHistory.filter(r => r.type === 'purchase' && r.status === 'pending');
             if(pendingPurchases.length === 0) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:30px; color:var(--text-muted);">لا توجد طلبات شراء حالياً.</td></tr>'; return; }
-            pendingPurchases.forEach(req => { tbody.innerHTML += `<tr><td style="color:var(--gold); font-weight:bold;">${req.userName} <br><span style="font-size:0.8rem;color:var(--text-muted); font-weight:normal;">${req.userId}</span></td><td style="font-size:1.1rem;">${req.itemIcon} ${req.itemName}</td><td class="amount-text" style="color:var(--success);">${req.amount.toLocaleString()} G</td><td><button class="btn-success" style="padding:8px; width:100%; margin-bottom:5px;" onclick="approveReq(${req.id})">تسليم ✅</button> <button class="btn-danger" style="padding:8px; width:100%;" onclick="rejectReq(${req.id})">رفض ❌</button></td></tr>`; });
+            pendingPurchases.forEach(req => { tbody.innerHTML += `<tr><td style="color:var(--gold); font-weight:bold;">${req.userName} <br><span style="font-size:0.8rem;color:var(--text-muted); font-weight:normal;">${req.userId}</span></td><td style="font-size:1.1rem;">${req.itemIcon} ${req.itemName}</td><td class="amount-text" style="color:var(--success);">${req.amount.toLocaleString()} G</td><td><button class="btn-success" style="padding:8px; width:100%; margin-bottom:5px;" onclick="approveReq(${req.id})">تسليم ✅</button> <button class="btn-danger" style="padding:8px; width:100%;" onclick="rejectReq(${req.id})">رفض وإرجاع المال ❌</button></td></tr>`; });
         }
         function renderAdminLoans() {
             const tbody = document.getElementById('admin-loans-tbody'); tbody.innerHTML = '';
@@ -932,7 +955,6 @@
             req.status = 'rejected'; saveDB(); renderAdminPurchases(); renderAdminLoans(); renderAdminMembers();
         }
 
-        // === النوافذ الجانبية ===
         function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('active'); }
         function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('active'); }
         function openModal(modalId) { document.getElementById(modalId).classList.add('active'); }
