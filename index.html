@@ -170,21 +170,30 @@
         .sum-box { flex: 1; background: rgba(0,0,0,0.5); border-radius: 10px; padding: 15px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
         .sum-box span { display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 5px; }
         .sum-box strong { font-size: 1.4rem; font-family: 'Cinzel', serif; }
+
+        /* مؤشر التزامن السحابي */
+        #sync-status {
+            position: fixed; bottom: 15px; left: 15px; background: rgba(0,0,0,0.7); 
+            padding: 8px 15px; border-radius: 30px; font-size: 0.85rem; color: var(--gold); 
+            border: 1px solid var(--gold-dark); z-index: 10000; pointer-events: none;
+            backdrop-filter: blur(5px); display: none;
+        }
     </style>
 </head>
 <body>
 
-    <!-- === شاشة التحميل === -->
+    <div id="sync-status">جاري الاتصال بالسحابة... ⏳</div>
+
     <div id="loader">
         <div class="axe-logo">
             <svg viewBox="0 0 100 100"><path d="M45,10 L55,10 L55,90 L45,90 Z M45,30 C20,20 10,40 10,50 C10,60 20,80 45,70 Z M55,30 C80,20 90,40 90,50 C90,60 80,80 55,70 Z" /><circle cx="50" cy="50" r="5" fill="var(--bg-dark)"/></svg>
         </div>
         <h1 class="loader-title viking-title">بنك الفايكنج</h1>
         <div class="loader-bar"><div class="loader-fill"></div></div>
+        <p style="color:var(--gold); margin-top:15px; font-size:0.9rem;" id="loader-msg">يتم استدعاء السجلات من السحابة...</p>
     </div>
 
-    <!-- === شاشة الدخول والتسجيل === -->
-    <div id="login-screen" class="screen active">
+    <div id="login-screen" class="screen">
         <div class="login-card">
             <h2 class="viking-title">بنك الفايكنج</h2>
             
@@ -194,7 +203,6 @@
                 <div class="auth-tab" onclick="toggleAuth('check')">حالة الطلب</div>
             </div>
 
-            <!-- 1. نموذج الدخول -->
             <div id="form-login" class="auth-form active">
                 <div class="input-group">
                     <label>الاسم أو اللقب</label>
@@ -207,7 +215,6 @@
                 <button class="btn-primary" onclick="handleLogin()">دخول قاعة المجد ⚔️</button>
             </div>
 
-            <!-- 2. نموذج طلب انضمام (لا ينشئ الحساب فوراً) -->
             <div id="form-signup" class="auth-form">
                 <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:15px;">أرسل طلب انضمام لزعماء الفايكنج، وسيتم توليد هوية فريدة لك عند الموافقة.</p>
                 <div class="input-group">
@@ -221,7 +228,6 @@
                 <button class="btn-secondary" onclick="handleSignup()">إرسال طلب الانضمام 📜</button>
             </div>
 
-            <!-- 3. نموذج الاستعلام عن حالة الطلب -->
             <div id="form-check" class="auth-form">
                 <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:15px;">استعلم برقم هاتفك لتعرف إذا تم قبولك ولتحصل على رقم هويتك (الرقم السري).</p>
                 <div class="input-group">
@@ -235,7 +241,6 @@
         </div>
     </div>
 
-    <!-- === القائمة الجانبية === -->
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
     <div class="sidebar" id="sidebar">
         <button class="close-sidebar" onclick="closeSidebar()">✖</button>
@@ -251,7 +256,6 @@
         <button class="logout-side-btn" onclick="handleLogout()">الانسحاب من القاعة (خروج)</button>
     </div>
 
-    <!-- === واجهة البنك === -->
     <div id="dashboard-screen" class="screen">
         <header class="top-nav">
             <div class="nav-right">
@@ -305,7 +309,6 @@
         </section>
     </div>
 
-    <!-- === المتجر === -->
     <div id="store-screen" class="screen">
         <div class="store-header">
             <h2 class="viking-title">متجر فالهالا 🛒</h2>
@@ -315,7 +318,6 @@
         <div class="store-grid" id="store-grid"></div>
     </div>
 
-    <!-- === شاشة الإدارة (Super Admin) === -->
     <div id="admin-screen" class="screen">
         <div class="admin-header" style="border-bottom: 2px solid var(--danger);">
             <h2 class="viking-title" style="color:var(--danger);">قاعة الإدارة العليا 👑</h2>
@@ -400,8 +402,6 @@
         </div>
     </div>
 
-    <!-- === النوافذ المنبثقة للعمليات === -->
-    
     <div class="modal" id="inventoryModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -498,7 +498,6 @@
         </div>
     </div>
 
-    <!-- نافذة الإدارة: تعديل بيانات العضو -->
     <div class="modal" id="editUserModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -518,7 +517,6 @@
         </div>
     </div>
 
-    <!-- نافذة الإدارة: منح أو مصادرة أموال -->
     <div class="modal" id="fundsModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -527,7 +525,6 @@
             </div>
             <p style="margin-bottom:15px; color:var(--text-muted);">المحارب: <strong style="color:var(--gold);" id="funds-user-name">...</strong></p>
             <input type="hidden" id="funds-user-id">
-            
             <div class="input-group">
                 <label>نوع الإجراء</label>
                 <select id="funds-type">
@@ -544,30 +541,118 @@
     </div>
 
     <script>
-        // === 1. قاعدة البيانات المحلية ===
-        let db = JSON.parse(localStorage.getItem('vikingDB')) || {
-            users: [], 
-            categories: [
-                { id: 'cat1', name: 'الأسلحة القتالية' },
-                { id: 'cat2', name: 'الدروع الفولاذية' },
-                { id: 'cat3', name: 'أساطيل السفن' }
-            ],
-            items: [
-                { id: 1, catId: 'cat1', icon: '🪓', name: 'فأس الجليد النادر', desc: 'فأس حاد كشفرة الجليد، مصمم لاختراق أصلب الدروع.', price: 850 },
-                { id: 2, catId: 'cat2', icon: '🛡️', name: 'درع يارل الملكي', desc: 'درع إسكندنافي فاخر يحمل نقوش الأودين.', price: 1200 },
-                { id: 3, catId: 'cat3', icon: '⛵', name: 'سفينة دراكار سريعة', desc: 'تتسع لـ 30 محارباً وتستخدم للغزوات الخاطفة.', price: 4500 }
-            ],
-            requestsHistory: [], // طلبات القروض والشراء
-            transactions: [], // سجل المصاريف والمداخيل
-            accountRequests: [] // طلبات الانضمام الجديدة
-        };
-        // تحديث هيكل قاعدة البيانات القديمة إن لم يحتوِ على accountRequests
-        if(!db.accountRequests) db.accountRequests = [];
-
-        function saveDB() { localStorage.setItem('vikingDB', JSON.stringify(db)); }
+        // === 1. الربط بقاعدة بيانات Google Sheets ===
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzU_T7m1SKvFqw78yR_eZvLMEax1l6LwS5j7lxEnSHoNwSKAO_nhphsupZH9SVaBXRDIw/exec';
+        
+        let db = { users: [], categories: [], items: [], requestsHistory: [], transactions: [], accountRequests: [] };
         let currentUser = null;
 
-        window.addEventListener('load', () => { setTimeout(() => { document.getElementById('loader').classList.add('hidden'); }, 2000); });
+        // دالة سحب البيانات من السحابة (جوجل شيت)
+        async function loadDB() {
+            try {
+                const response = await fetch(SCRIPT_URL);
+                const result = await response.json();
+                
+                if(result.status === "success") {
+                    const data = result.data;
+                    
+                    if(data.users) {
+                        db.users = data.users.map(u => ({
+                            id: u["رقم الهوية"]?.toString() || "",
+                            name: u["الاسم"] || "",
+                            balance: Number(u["الرصيد"]) || 0,
+                            debt: Number(u["الديون"]) || 0,
+                            inventory: (typeof u["الممتلكات"] === 'string' ? JSON.parse(u["الممتلكات"] || '[]') : u["الممتلكات"]) || []
+                        }));
+                    }
+                    
+                    if(data.accountRequests) {
+                        db.accountRequests = data.accountRequests.map(r => ({
+                            id: r["رقم الطلب"], name: r["الاسم"], phone: r["رقم الهاتف"]?.toString() || "",
+                            status: r["الحالة"], generatedId: r["الهوية المولدة"], date: r["التاريخ"]
+                        }));
+                    }
+                    
+                    if(data.storeItems) {
+                        db.items = data.storeItems.map(i => ({
+                            id: i["رقم السلعة"], catId: i["القسم"], icon: i["الأيقونة"],
+                            name: i["الاسم"], desc: i["الوصف"], price: Number(i["السعر"]) || 0
+                        }));
+                    }
+                    
+                    if(data.bankRequests) {
+                        db.requestsHistory = data.bankRequests.map(r => {
+                            let req = {
+                                id: r["رقم الطلب"], userId: r["رقم الهوية"]?.toString() || "", userName: r["اسم العضو"],
+                                type: r["نوع الطلب"], amount: Number(r["المبلغ"]) || 0, status: r["الحالة"], date: r["التاريخ"]
+                            };
+                            
+                            // استخراج التفاصيل حسب نوع الطلب
+                            if(r["نوع الطلب"] === 'purchase') {
+                                try {
+                                    let parsed = JSON.parse(r["التفاصيل"]);
+                                    req.itemName = parsed.itemName; req.itemIcon = parsed.itemIcon; req.itemDesc = parsed.itemDesc;
+                                    req.title = `طلب صياغة: ${req.itemName}`;
+                                } catch(e) {
+                                    req.itemName = r["التفاصيل"]; req.title = `طلب صياغة: ${r["التفاصيل"]}`;
+                                }
+                            } else {
+                                req.reason = r["التفاصيل"]; req.title = 'طلب تمويل (دين)';
+                            }
+                            return req;
+                        });
+                    }
+                    
+                    if(data.transactions) {
+                        db.transactions = data.transactions.map(t => ({
+                            id: t["رقم العملية"], userId: t["رقم الهوية"]?.toString() || "", type: t["نوع العملية"],
+                            amount: Number(t["المبلغ"]) || 0, title: t["الوصف"], date: t["التاريخ"]
+                        }));
+                    }
+                }
+            } catch(e) {
+                console.error("Error loading DB", e);
+                document.getElementById('loader-msg').innerText = "حدث خطأ في جلب السجلات. قد يعمل النظام محلياً مؤقتاً.";
+            }
+
+            // استعادة الأقسام محلياً لأنها لم تكن ضمن السكربت (أو استخدام الافتراضي)
+            db.categories = JSON.parse(localStorage.getItem('vikingCats')) || [
+                { id: 'cat1', name: 'الأسلحة القتالية' }, { id: 'cat2', name: 'الدروع الفولاذية' }, { id: 'cat3', name: 'أساطيل السفن' }
+            ];
+        }
+
+        // دالة حفظ البيانات وإرسالها للسحابة (جوجل شيت)
+        function saveDB() {
+            const syncStatus = document.getElementById('sync-status');
+            if(syncStatus) { syncStatus.style.display = 'block'; syncStatus.innerText = '⏳ جاري المزامنة مع السحابة...'; }
+            
+            // حفظ الأقسام محلياً
+            localStorage.setItem('vikingCats', JSON.stringify(db.categories));
+
+            // ترتيب البيانات لتطابق أعمدة جداول جوجل
+            const payload = {
+                action: "sync_db",
+                db: {
+                    users: db.users.map(u => ({ "رقم الهوية": u.id, "الاسم": u.name, "الرصيد": u.balance, "الديون": u.debt, "الممتلكات": JSON.stringify(u.inventory) })),
+                    accountRequests: db.accountRequests.map(r => ({ "رقم الطلب": r.id, "الاسم": r.name, "رقم الهاتف": r.phone, "الحالة": r.status, "الهوية المولدة": r.generatedId || "", "التاريخ": r.date })),
+                    storeItems: db.items.map(i => ({ "رقم السلعة": i.id, "القسم": i.catId, "الأيقونة": i.icon, "الاسم": i.name, "الوصف": i.desc, "السعر": i.price })),
+                    bankRequests: db.requestsHistory.map(r => ({ "رقم الطلب": r.id, "رقم الهوية": r.userId, "اسم العضو": r.userName, "نوع الطلب": r.type, "التفاصيل": r.type === 'purchase' ? JSON.stringify({itemName: r.itemName, itemIcon: r.itemIcon, itemDesc: r.itemDesc}) : r.reason, "المبلغ": r.amount, "الحالة": r.status, "التاريخ": r.date })),
+                    transactions: db.transactions.map(t => ({ "رقم العملية": t.id, "رقم الهوية": t.userId, "نوع العملية": t.type, "المبلغ": t.amount, "الوصف": t.title, "التاريخ": t.date }))
+                }
+            };
+
+            fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
+            .then(res => res.json())
+            .then(res => { if(syncStatus) { syncStatus.innerText = '🟢 متصل بالسحابة (تم الحفظ)'; setTimeout(()=>syncStatus.style.display='none', 3000); }})
+            .catch(err => { if(syncStatus) syncStatus.innerText = '🔴 خطأ في الاتصال (المزامنة فشلت)'; });
+        }
+
+        // عند فتح الموقع
+        window.addEventListener('load', async () => {
+            await loadDB(); // جلب البيانات قبل فتح الموقع
+            document.getElementById('loader').classList.add('hidden');
+            switchScreen('login-screen');
+        });
 
         function switchScreen(screenId) {
             document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
@@ -578,35 +663,19 @@
         }
 
         function createTransaction(userId, type, amount, title) {
-            db.transactions.push({
-                id: Date.now() + Math.random(),
-                userId: userId,
-                type: type, 
-                amount: amount,
-                title: title,
-                date: new Date().toLocaleString('ar-EG')
-            });
+            db.transactions.push({ id: Date.now() + Math.floor(Math.random()*1000), userId: userId, type: type, amount: amount, title: title, date: new Date().toLocaleString('ar-EG') });
             saveDB();
         }
 
-        // التبديل بين نموذج الدخول والإنشاء وحالة الطلب
         function toggleAuth(type) {
             document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
-            
-            if(type === 'login') {
-                document.querySelectorAll('.auth-tab')[0].classList.add('active');
-                document.getElementById('form-login').classList.add('active');
-            } else if (type === 'signup') {
-                document.querySelectorAll('.auth-tab')[1].classList.add('active');
-                document.getElementById('form-signup').classList.add('active');
-            } else {
-                document.querySelectorAll('.auth-tab')[2].classList.add('active');
-                document.getElementById('form-check').classList.add('active');
-            }
+            if(type === 'login') { document.querySelectorAll('.auth-tab')[0].classList.add('active'); document.getElementById('form-login').classList.add('active'); } 
+            else if (type === 'signup') { document.querySelectorAll('.auth-tab')[1].classList.add('active'); document.getElementById('form-signup').classList.add('active'); } 
+            else { document.querySelectorAll('.auth-tab')[2].classList.add('active'); document.getElementById('form-check').classList.add('active'); }
         }
 
-        // === 2. الدخول و إنشاء الحساب ===
+        // === 2. الدخول والطلبات ===
         function handleLogin() {
             const name = document.getElementById('login-name').value.trim();
             const id = document.getElementById('login-id').value.trim();
@@ -628,24 +697,13 @@
             if(!name || !phone) { alert("يرجى تعبئة الحقول لإرسال الطلب!"); return; }
 
             let existingReq = db.accountRequests.find(r => r.phone === phone);
-            if(existingReq) {
-                alert("يوجد طلب مسجل مسبقاً بهذا الرقم! يرجى الاستعلام من (حالة الطلب).");
-                return;
-            }
+            if(existingReq) { alert("يوجد طلب مسجل مسبقاً بهذا الرقم! يرجى الاستعلام من (حالة الطلب)."); return; }
 
-            db.accountRequests.push({
-                id: Date.now(),
-                name: name,
-                phone: phone,
-                status: 'pending',
-                generatedId: null,
-                date: new Date().toLocaleString('ar-EG')
-            });
+            db.accountRequests.push({ id: Date.now(), name: name, phone: phone, status: 'pending', generatedId: '', date: new Date().toLocaleString('ar-EG') });
             saveDB();
             
             alert(`تم إرسال طلب الانضمام لزعماء الفايكنج يا ${name}! يمكنك متابعة حالة طلبك برقم هاتفك.`);
-            document.getElementById('signup-name').value = ''; document.getElementById('signup-phone').value = '';
-            toggleAuth('check');
+            document.getElementById('signup-name').value = ''; document.getElementById('signup-phone').value = ''; toggleAuth('check');
         }
 
         function checkReqStatus() {
@@ -655,24 +713,18 @@
             let req = db.accountRequests.find(r => r.phone === phone);
             if(!req) { alert("لم يتم العثور على طلب بهذا الرقم في سجلاتنا."); return; }
             
-            if(req.status === 'pending') {
-                alert("طلبك ما زال قيد المراجعة في مجلس الحكماء ⏳");
-            } else if(req.status === 'approved') {
-                alert(`مبروك! تمت الموافقة. \n\nرقم هويتك (الرقم السري) هو:\n\n ${req.generatedId} \n\nاستخدمه لتسجيل الدخول.`);
-            } else {
-                alert("للأسف، تم رفض طلب انضمامك من قبل القيادة ❌");
-            }
+            if(req.status === 'pending') { alert("طلبك ما زال قيد المراجعة في مجلس الحكماء ⏳"); } 
+            else if(req.status === 'approved') { alert(`مبروك! تمت الموافقة. \n\nرقم هويتك (الرقم السري) هو:\n\n ${req.generatedId} \n\nاستخدمه لتسجيل الدخول.`); } 
+            else { alert("للأسف، تم رفض طلب انضمامك من قبل القيادة ❌"); }
         }
 
         function handleLogout() {
-            currentUser = null; 
-            document.getElementById('login-name').value = ''; document.getElementById('login-id').value = '';
-            document.getElementById('signup-name').value = ''; document.getElementById('signup-phone').value = '';
-            document.getElementById('check-phone').value = '';
+            currentUser = null; document.getElementById('login-name').value = ''; document.getElementById('login-id').value = '';
+            document.getElementById('signup-name').value = ''; document.getElementById('signup-phone').value = ''; document.getElementById('check-phone').value = '';
             switchScreen('login-screen'); closeSidebar(); toggleAuth('login');
         }
 
-        // === 3. لوحة تحكم العضو ===
+        // === 3. لوحة العضو والعمليات ===
         function updateDashboard() {
             if(!currentUser) return;
             currentUser = db.users.find(u => u.id === currentUser.id);
@@ -684,7 +736,6 @@
             document.getElementById('modal-debt-display').innerText = currentUser.debt.toLocaleString() + ' G';
         }
 
-        // === 4. العمليات: تحويل، سداد ديون ===
         function processTransfer() {
             const targetId = document.getElementById('transfer-id').value.trim();
             const amount = parseInt(document.getElementById('transfer-amount').value);
@@ -700,8 +751,7 @@
             createTransaction(currentUser.id, 'expense', amount, `تحويل غنائم إلى (${targetUser.name})`);
             createTransaction(targetUser.id, 'income', amount, `استلام غنائم من (${currentUser.name})`);
             
-            saveDB(); updateDashboard();
-            alert(`تم تحويل ${amount} G بنجاح للمحارب ${targetUser.name}!`);
+            saveDB(); updateDashboard(); alert(`تم تحويل ${amount} G بنجاح للمحارب ${targetUser.name}!`);
             closeModal('transferModal'); document.getElementById('transfer-amount').value=''; document.getElementById('transfer-id').value='';
         }
 
@@ -714,8 +764,7 @@
 
             currentUser.balance -= amount; currentUser.debt -= amount;
             createTransaction(currentUser.id, 'expense', amount, 'سداد جزء من الديون للبنك');
-            saveDB(); updateDashboard();
-            alert(`تم سداد ${amount} G من ديونك بنجاح!`); closeModal('payDebtModal');
+            saveDB(); updateDashboard(); alert(`تم سداد ${amount} G من ديونك بنجاح!`); closeModal('payDebtModal');
         }
 
         function submitLoanRequest() {
@@ -727,7 +776,7 @@
             saveDB(); alert("تم إرسال طلبك لمجلس الحكماء للموافقة!"); closeModal('loanModal'); document.getElementById('loan-amount').value='';
         }
 
-        // === 5. الممتلكات وحالة الطلبات والسجل ===
+        // قوائم العضو (الممتلكات - الحالة - السجل)
         function renderUserInventory() {
             const list = document.getElementById('user-inventory-list'); list.innerHTML = '';
             if(!currentUser.inventory || currentUser.inventory.length === 0) { list.innerHTML = '<p style="text-align:center; color:var(--text-muted);">خزينتك فارغة من العتاد.</p>'; return; }
@@ -738,13 +787,11 @@
             const list = document.getElementById('user-status-list'); list.innerHTML = '';
             let myReqs = db.requestsHistory.filter(r => r.userId === currentUser.id).reverse();
             if(myReqs.length === 0) { list.innerHTML = '<p style="text-align:center; color:var(--text-muted);">لا توجد طلبات سابقة.</p>'; return; }
-            
             myReqs.forEach(req => {
                 let statusHtml = '';
                 if(req.status === 'pending') statusHtml = '<span class="status-badge status-pending">⏳ معلق</span>';
                 if(req.status === 'approved') statusHtml = '<span class="status-badge status-approved">✅ مقبول</span>';
                 if(req.status === 'rejected') statusHtml = '<span class="status-badge status-rejected">❌ مرفوض</span>';
-                
                 list.innerHTML += `<div class="list-item"><div class="list-item-info"><h4>${req.title}</h4><p class="amount-text">${req.amount.toLocaleString()} G</p><p style="font-size:0.75rem; margin-top:5px;">${req.date}</p></div>${statusHtml}</div>`;
             });
         }
@@ -752,22 +799,19 @@
         function renderLedger() {
             const list = document.getElementById('user-ledger-list'); list.innerHTML = '';
             let myTrans = db.transactions.filter(t => t.userId === currentUser.id).reverse();
-            
             let tInc = 0, tExp = 0;
             myTrans.forEach(t => {
                 if(t.type === 'income') tInc += t.amount; else tExp += t.amount;
                 let color = t.type === 'income' ? 'var(--success)' : 'var(--text-light)';
                 let sign = t.type === 'income' ? '+' : '-';
                 let icon = t.type === 'income' ? '📥' : '📤';
-                
                 list.innerHTML += `<div class="list-item"><div class="list-item-info"><h4 style="font-size:1rem;">${icon} ${t.title}</h4><p>${t.date}</p></div><div class="amount-text" style="color:${color}; font-weight:bold;">${sign} ${t.amount.toLocaleString()} G</div></div>`;
             });
-
             if(myTrans.length === 0) list.innerHTML = '<p style="text-align:center; color:var(--text-muted);">لا توجد عمليات مالية مسجلة.</p>';
             document.getElementById('total-income').innerText = tInc.toLocaleString() + ' G'; document.getElementById('total-expense').innerText = tExp.toLocaleString() + ' G';
         }
 
-        // === 6. المتجر ===
+        // === 4. المتجر ===
         let activeCategory = 'all';
         function renderStore() {
             const catFilters = document.getElementById('store-cats-filters');
@@ -788,11 +832,10 @@
             
             currentUser.balance -= item.price; // تجميد
             db.requestsHistory.push({ id: Date.now(), userId: currentUser.id, userName: currentUser.name, type: 'purchase', title: `طلب صياغة: ${item.name}`, itemIcon: item.icon, itemName: item.name, itemDesc: item.desc, amount: item.price, status: 'pending', date: new Date().toLocaleString('ar-EG') });
-            
             saveDB(); updateDashboard(); alert("تم حجز الذهب وإرسال طلب الشراء للإدارة!");
         }
 
-        // === 7. الإدارة ===
+        // === 5. الإدارة (Super Admin) ===
         function switchAdminTab(tabId, btn) {
             document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.admin-tab-btn').forEach(el => el.classList.remove('active'));
@@ -801,7 +844,6 @@
 
         function renderAdminAll() { renderAdminMembers(); renderAdminAccRequests(); renderAdminStoreConfigs(); renderAdminPurchases(); renderAdminLoans(); }
 
-        // الإدارة - الأعضاء والماليات
         function renderAdminMembers() {
             const tbody = document.getElementById('admin-members-tbody'); tbody.innerHTML = '';
             db.users.forEach(u => {
@@ -817,54 +859,34 @@
         function deleteUser(id) { if(confirm("هل أنت متأكد من مسح هذا المحارب نهائياً؟")) { db.users = db.users.filter(u => u.id !== id); saveDB(); renderAdminMembers(); } }
 
         function openFundsModal(userId) {
-            let u = db.users.find(user => user.id === userId);
-            document.getElementById('funds-user-id').value = u.id;
-            document.getElementById('funds-user-name').innerText = u.name;
-            document.getElementById('funds-amount').value = '';
-            openModal('fundsModal');
+            let u = db.users.find(user => user.id === userId); document.getElementById('funds-user-id').value = u.id; document.getElementById('funds-user-name').innerText = u.name; document.getElementById('funds-amount').value = ''; openModal('fundsModal');
         }
-
         function processAdminFunds() {
-            let id = document.getElementById('funds-user-id').value;
-            let u = db.users.find(user => user.id === id);
-            let type = document.getElementById('funds-type').value;
-            let amount = parseInt(document.getElementById('funds-amount').value);
-            
+            let id = document.getElementById('funds-user-id').value; let u = db.users.find(user => user.id === id);
+            let type = document.getElementById('funds-type').value; let amount = parseInt(document.getElementById('funds-amount').value);
             if(!amount || amount <= 0) { alert("أدخل مبلغ صحيح!"); return; }
-            
-            if(type === 'add') {
-                u.balance += amount; createTransaction(u.id, 'income', amount, 'غنائم ممنوحة من القيادة العليا'); alert(`تم منح ${amount} G للمحارب ${u.name}!`);
-            } else {
-                if(u.balance < amount) { alert("رصيد المحارب لا يكفي لخصم هذا المبلغ!"); return; }
-                u.balance -= amount; createTransaction(u.id, 'expense', amount, 'غنائم مصادرة من القيادة العليا'); alert(`تم مصادرة ${amount} G من المحارب ${u.name}!`);
-            }
+            if(type === 'add') { u.balance += amount; createTransaction(u.id, 'income', amount, 'غنائم ممنوحة من القيادة العليا'); alert(`تم منح ${amount} G للمحارب ${u.name}!`); } 
+            else { if(u.balance < amount) { alert("رصيد المحارب لا يكفي لخصم هذا المبلغ!"); return; } u.balance -= amount; createTransaction(u.id, 'expense', amount, 'غنائم مصادرة من القيادة العليا'); alert(`تم مصادرة ${amount} G من المحارب ${u.name}!`); }
             saveDB(); closeModal('fundsModal'); renderAdminMembers();
         }
 
-        // الإدارة - طلبات الانضمام الجديدة
         function renderAdminAccRequests() {
             const tbody = document.getElementById('admin-acc-reqs-tbody'); tbody.innerHTML = '';
             let pendingReqs = db.accountRequests.filter(r => r.status === 'pending');
             if(pendingReqs.length === 0) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:30px;">لا توجد طلبات انضمام جديدة.</td></tr>'; return; }
-            
-            pendingReqs.forEach(req => {
-                tbody.innerHTML += `<tr><td style="color:var(--gold); font-weight:bold;">${req.name}</td><td>${req.phone}</td><td>${req.date}</td><td><button class="btn-success" style="padding:8px; margin-left:5px;" onclick="approveAccReq(${req.id})">قبول وتوليد هوية ✅</button> <button class="btn-danger" style="padding:8px;" onclick="rejectAccReq(${req.id})">رفض ❌</button></td></tr>`;
-            });
+            pendingReqs.forEach(req => { tbody.innerHTML += `<tr><td style="color:var(--gold); font-weight:bold;">${req.name}</td><td>${req.phone}</td><td>${req.date}</td><td><button class="btn-success" style="padding:8px; margin-left:5px;" onclick="approveAccReq(${req.id})">قبول وتوليد هوية ✅</button> <button class="btn-danger" style="padding:8px;" onclick="rejectAccReq(${req.id})">رفض ❌</button></td></tr>`; });
         }
         function approveAccReq(reqId) {
             let req = db.accountRequests.find(r => r.id === reqId); if(!req) return;
-            
             let newId; do { newId = 'VK-' + Math.floor(1000 + Math.random() * 9000); } while(db.users.find(u => u.id === newId));
             req.status = 'approved'; req.generatedId = newId;
             db.users.push({ id: newId, name: req.name, phone: req.phone, balance: 2000, debt: 0, inventory: [] });
             createTransaction(newId, 'income', 2000, 'هدية ترحيبية من مجلس الفايكنج');
-            
             saveDB(); renderAdminAccRequests(); renderAdminMembers();
             alert(`تمت الموافقة! رقم الهوية المولد للمحارب هو: ${newId}`);
         }
         function rejectAccReq(reqId) { let req = db.accountRequests.find(r => r.id === reqId); if(req) req.status = 'rejected'; saveDB(); renderAdminAccRequests(); }
 
-        // الإدارة - المتجر
         function renderAdminStoreConfigs() {
             const catSelect = document.getElementById('new-item-cat'); catSelect.innerHTML = '';
             const catList = document.getElementById('admin-cats-list'); catList.innerHTML = '';
@@ -886,12 +908,11 @@
         }
         function adminDeleteItem(id) { if(confirm("حذف العتاد من المتجر؟")) { db.items = db.items.filter(i => i.id !== id); saveDB(); renderAdminStoreConfigs(); } }
 
-        // الإدارة - الطلبات والديون
         function renderAdminPurchases() {
             const tbody = document.getElementById('admin-purchases-tbody'); tbody.innerHTML = '';
             let pendingPurchases = db.requestsHistory.filter(r => r.type === 'purchase' && r.status === 'pending');
             if(pendingPurchases.length === 0) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:30px; color:var(--text-muted);">لا توجد طلبات شراء حالياً.</td></tr>'; return; }
-            pendingPurchases.forEach(req => { tbody.innerHTML += `<tr><td style="color:var(--gold); font-weight:bold;">${req.userName} <br><span style="font-size:0.8rem;color:var(--text-muted);">${req.userId}</span></td><td style="font-size:1.1rem;">${req.itemIcon} ${req.itemName}</td><td class="amount-text" style="color:var(--success);">${req.amount.toLocaleString()} G</td><td><button class="btn-success" style="padding:8px; width:100%; margin-bottom:5px;" onclick="approveReq(${req.id})">تسليم ✅</button> <button class="btn-danger" style="padding:8px; width:100%;" onclick="rejectReq(${req.id})">رفض وإرجاع المال ❌</button></td></tr>`; });
+            pendingPurchases.forEach(req => { tbody.innerHTML += `<tr><td style="color:var(--gold); font-weight:bold;">${req.userName} <br><span style="font-size:0.8rem;color:var(--text-muted); font-weight:normal;">${req.userId}</span></td><td style="font-size:1.1rem;">${req.itemIcon} ${req.itemName}</td><td class="amount-text" style="color:var(--success);">${req.amount.toLocaleString()} G</td><td><button class="btn-success" style="padding:8px; width:100%; margin-bottom:5px;" onclick="approveReq(${req.id})">تسليم ✅</button> <button class="btn-danger" style="padding:8px; width:100%;" onclick="rejectReq(${req.id})">رفض ❌</button></td></tr>`; });
         }
         function renderAdminLoans() {
             const tbody = document.getElementById('admin-loans-tbody'); tbody.innerHTML = '';
@@ -911,7 +932,7 @@
             req.status = 'rejected'; saveDB(); renderAdminPurchases(); renderAdminLoans(); renderAdminMembers();
         }
 
-        // === النوافذ الجانبية والعائمة ===
+        // === النوافذ الجانبية ===
         function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('active'); }
         function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('active'); }
         function openModal(modalId) { document.getElementById(modalId).classList.add('active'); }
