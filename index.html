@@ -227,7 +227,7 @@
         
         <div class="login-card">
             <h2 class="viking-title" data-i18n="bankName">بنك الفايكنج</h2>
-            <p data-i18n="loginDesc">أدخل هويتك لدخول قاعة المجد المالية</p>
+            <p data-i18n="loginDesc">أدخل هويتك لدخول حسابك البنكي</p>
             
             <div class="input-group">
                 <label data-i18n="username">الاسم أو اللقب</label>
@@ -253,9 +253,9 @@
             <p data-i18n="rankTitle" style="color: var(--text-muted); font-size: 0.9rem;">رتبة: يارل (Jarl)</p>
         </div>
         <ul class="sidebar-menu">
-            <li><a href="#" onclick="openModal('detailsModal'); closeSidebar();">📜 <span data-i18n="accDetails">مخطوطة الحساب (التفاصيل)</span></a></li>
-            <li><a href="#" onclick="openModal('passwordModal'); closeSidebar();">🗝️ <span data-i18n="changePass">تغيير ختم المرور (الرمز السري)</span></a></li>
-            <li><a href="#" onclick="alert('سيتم إضافة نظام أسطول السفن قريباً!'); closeSidebar();">⛵ <span data-i18n="myFleet">أسطول الغزو الخاص بي</span></a></li>
+            <li><a href="#" onclick="openModal('detailsModal'); closeSidebar();">📜 <span data-i18n="accDetails">تفاصيل حسابك البنكي</span></a></li>
+            <li><a href="#" onclick="openModal('passwordModal'); closeSidebar();">🗝️ <span data-i18n="changePass">تغيير ختم المرور </span></a></li>
+            <li><a href="#" onclick="alert('سيتم إضافة نظام أسطول السفن قريباً!'); closeSidebar();">⛵ <span data-i18n="myFleet">مصاريفك من الحساب</span></a></li>
         </ul>
         <div class="sidebar-footer">
             <button class="logout-side-btn" onclick="handleLogout()" data-i18n="logout">الانسحاب من القاعة (خروج)</button>
@@ -285,8 +285,8 @@
         <!-- قسم العروض الحصرية (ميزة جديدة) -->
         <div class="offers-banner">
             <div class="offer-text">
-                <h3 data-i18n="offerTitle">🔥 غنائم حصرية (عروض استثمارية)</h3>
-                <p data-i18n="offerDesc">استثمر في بناء سفن "الدراكار" الجديدة للغزوة القادمة واحصل على عوائد تصل لـ 20%.</p>
+                <h3 data-i18n="offerTitle">🔥 غنائم حصرية (عروض خاصة)</h3>
+                <p data-i18n="offerDesc"> استثمر في العروض الحصرية.</p>
             </div>
             <button class="offer-btn" onclick="alert('تم تسجيل اهتمامك، سيتواصل معك حكيم القرية!')" data-i18n="offerBtn">استثمر الآن</button>
         </div>
@@ -309,11 +309,11 @@
         <section class="action-grid">
             <div class="action-btn" onclick="alert('سيتم برمجة المتجر لاحقاً!')">
                 <div class="action-icon">🛒</div>
-                <span data-i18n="store">متجر العتاد</span>
+                <span data-i18n="store">متجر المحاربين</span>
             </div>
             <div class="action-btn" onclick="alert('نظام التحويل قيد التطوير!')">
                 <div class="action-icon">💸</div>
-                <span data-i18n="transfer">نقل الغنائم (تحويل)</span>
+                <span data-i18n="transfer">نقل الغنائم </span>
             </div>
             <!-- زر طلب الديون يفتح نافذة -->
             <div class="action-btn" onclick="openModal('loanModal')">
