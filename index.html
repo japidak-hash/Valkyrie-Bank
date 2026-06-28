@@ -17,7 +17,7 @@
             --text-muted: #94a3b8;
             --danger: #ef4444;         
             --success: #10b981;        
-            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-bg: rgba(30, 41, 59, 0.8);
             --glass-border: rgba(251, 191, 36, 0.2);
             --transition: all 0.3s ease;
         }
@@ -47,28 +47,32 @@
         #loader.hidden { opacity: 0; visibility: hidden; }
         
         .axe-logo svg {
-            width: 120px; height: 120px; fill: none; stroke: var(--gold);
-            stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
-            filter: drop-shadow(0 0 15px rgba(251, 191, 36, 0.4));
-            animation: floatLogo 3s ease-in-out infinite;
+            width: 140px; height: 140px; fill: rgba(251, 191, 36, 0.1); stroke: var(--gold);
+            stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+            filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.5));
+            animation: axeSwing 3s ease-in-out infinite alternate;
         }
-        @keyframes floatLogo { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-15px) scale(1.05); } }
+        @keyframes axeSwing { 0% { transform: rotate(-10deg) scale(1); } 100% { transform: rotate(10deg) scale(1.05); } }
 
-        .loader-title { margin-top: 20px; font-size: 2rem; font-weight: 900; color: var(--gold); letter-spacing: 2px; }
+        .loader-title { margin-top: 20px; font-size: 2.2rem; font-weight: 900; color: var(--gold); letter-spacing: 2px; }
         .loader-bar { width: 200px; height: 4px; background: rgba(255,255,255,0.1); margin-top: 20px; border-radius: 4px; overflow: hidden; }
-        .loader-fill { width: 0%; height: 100%; background: var(--gold); animation: loadProgress 2s ease-in-out forwards; }
+        .loader-fill { width: 0%; height: 100%; background: var(--gold); animation: loadProgress 2.5s ease-in-out forwards; }
         @keyframes loadProgress { 100% { width: 100%; } }
 
         /* === شاشة تسجيل الدخول === */
-        #login-screen {
-            min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            position: relative; padding: 20px; transition: opacity 0.5s ease;
+        #login-screen, #store-screen, #admin-screen {
+            min-height: 100vh; display: none; flex-direction: column; align-items: center; justify-content: center;
+            position: relative; padding: 20px; transition: opacity 0.5s ease; opacity: 0;
         }
+        #login-screen.active, #store-screen.active, #admin-screen.active, #dashboard-screen.active {
+            display: flex; opacity: 1;
+        }
+        #dashboard-screen.active { display: block; }
         
         .lang-switch {
             position: absolute; top: 30px; left: 30px; background: transparent; border: 1px solid var(--gold);
             color: var(--gold); padding: 8px 20px; border-radius: 50px; cursor: pointer; font-weight: bold;
-            transition: var(--transition);
+            transition: var(--transition); z-index: 100;
         }
         [dir="ltr"] .lang-switch { left: auto; right: 30px; }
         .lang-switch:hover { background: var(--gold); color: var(--bg-dark); }
@@ -86,108 +90,97 @@
         .input-group { margin-bottom: 20px; text-align: right; }
         [dir="ltr"] .input-group { text-align: left; }
         .input-group label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
-        .input-group input, .input-group select {
+        .input-group input, .input-group select, .input-group textarea {
             width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(0,0,0,0.2); color: var(--text-light); font-size: 1rem; outline: none; transition: var(--transition);
+            background: rgba(0,0,0,0.3); color: var(--text-light); font-size: 1rem; outline: none; transition: var(--transition);
         }
-        .input-group input:focus, .input-group select:focus { border-color: var(--gold); box-shadow: 0 0 10px rgba(251, 191, 36, 0.2); }
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus { border-color: var(--gold); box-shadow: 0 0 10px rgba(251, 191, 36, 0.2); }
 
-        .btn-primary {
-            width: 100%; padding: 16px; background: linear-gradient(135deg, var(--gold), var(--gold-hover));
-            border: none; border-radius: 12px; color: var(--bg-dark); font-size: 1.1rem; font-weight: 900;
-            cursor: pointer; transition: var(--transition); margin-top: 10px;
-        }
+        .btn-primary { width: 100%; padding: 16px; background: linear-gradient(135deg, var(--gold), var(--gold-hover)); border: none; border-radius: 12px; color: var(--bg-dark); font-size: 1.1rem; font-weight: 900; cursor: pointer; transition: var(--transition); margin-top: 10px; }
         .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(251, 191, 36, 0.3); }
+        .btn-danger { background: linear-gradient(135deg, #ef4444, #b91c1c); color: white; }
+        .btn-success { background: linear-gradient(135deg, #10b981, #059669); color: white; }
 
         /* === واجهة البنك (Dashboard) === */
-        #dashboard-screen { display: none; padding: 20px; max-width: 1200px; margin: 0 auto; opacity: 0; transition: opacity 0.5s ease; }
+        #dashboard-screen { padding: 20px; max-width: 1200px; margin: 0 auto; display: none; opacity: 0; transition: opacity 0.5s ease; }
         
         .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; margin-top: 10px; }
-        
         .nav-right { display: flex; align-items: center; gap: 15px; }
         .menu-btn { background: transparent; border: none; color: var(--gold); font-size: 2rem; cursor: pointer; transition: var(--transition); }
         .menu-btn:hover { transform: scale(1.1); }
-        
         .user-info { display: flex; align-items: center; gap: 15px; }
         .avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--bg-panel); border: 2px solid var(--gold); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
         .welcome-text h3 { font-size: 1.2rem; color: var(--text-light); }
-        .welcome-text p { font-size: 0.85rem; color: var(--gold); font-weight: bold; } /* الرتبة هنا */
+        .welcome-text p { font-size: 0.85rem; color: var(--gold); font-weight: bold; }
         
-        .nav-left { display: flex; align-items: center; gap: 20px; }
-        .raven-bell { font-size: 1.5rem; cursor: pointer; position: relative; }
-        .raven-bell::after { content: ''; position: absolute; top: 0; right: -2px; width: 10px; height: 10px; background: var(--danger); border-radius: 50%; border: 2px solid var(--bg-dark); }
-
-        /* === قسم العروض الحصرية === */
-        .offers-banner {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(251, 191, 36, 0.1));
-            border: 1px solid var(--gold); border-radius: 20px; padding: 20px 30px;
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;
-            box-shadow: 0 0 20px rgba(251, 191, 36, 0.15); animation: pulseGlow 4s infinite alternate;
-        }
-        @keyframes pulseGlow { 0% { box-shadow: 0 0 10px rgba(251, 191, 36, 0.1); } 100% { box-shadow: 0 0 25px rgba(251, 191, 36, 0.3); } }
-        .offer-text h3 { color: var(--gold); font-size: 1.3rem; margin-bottom: 5px; display: flex; align-items: center; gap: 10px; }
+        .offers-banner { background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(251, 191, 36, 0.1)); border: 1px solid var(--gold); border-radius: 20px; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; box-shadow: 0 0 20px rgba(251, 191, 36, 0.15); }
+        .offer-text h3 { color: var(--gold); font-size: 1.3rem; margin-bottom: 5px; }
         .offer-text p { color: var(--text-light); font-size: 0.95rem; opacity: 0.9; }
         .offer-btn { background: var(--gold); color: var(--bg-dark); border: none; padding: 10px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; }
-        
-        @media (max-width: 768px) { .offers-banner { flex-direction: column; text-align: center; gap: 15px; } }
 
-        /* === بطاقة الحساب البنكي === */
-        .bank-card {
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.9));
-            border: 1px solid var(--glass-border); border-radius: 24px; padding: 35px;
-            position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            margin-bottom: 30px;
-        }
+        .bank-card { background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.9)); border: 1px solid var(--glass-border); border-radius: 24px; padding: 35px; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.4); margin-bottom: 30px; }
         .bank-card::after { content: '🪓'; position: absolute; bottom: -20px; left: -20px; font-size: 8rem; opacity: 0.05; transform: rotate(-15deg); pointer-events: none; }
         [dir="ltr"] .bank-card::after { left: auto; right: -20px; transform: rotate(15deg); }
-
         .card-label { font-size: 1rem; color: var(--text-muted); margin-bottom: 10px; }
         .card-balance { font-size: 3.5rem; font-weight: 900; color: var(--gold); margin-bottom: 25px; letter-spacing: 1px; font-family: 'Cinzel', serif;}
-        
         .card-details { display: flex; justify-content: space-between; align-items: flex-end; }
         .account-number { font-family: monospace; font-size: 1.2rem; letter-spacing: 2px; color: var(--text-light); }
         .account-status { background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 5px 15px; border-radius: 20px; font-size: 0.85rem; border: 1px solid var(--success); }
 
-        /* === الأزرار السريعة === */
         .action-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 40px; }
-        .action-btn { background: var(--bg-panel); border: 1px solid rgba(255,255,255,0.05); padding: 20px; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; cursor: pointer; transition: var(--transition); color: var(--text-light); text-decoration: none; }
+        .action-btn { background: var(--bg-panel); border: 1px solid rgba(255,255,255,0.05); padding: 20px; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; cursor: pointer; transition: var(--transition); color: var(--text-light); }
         .action-btn:hover { background: rgba(251, 191, 36, 0.1); border-color: var(--gold); transform: translateY(-5px); }
         .action-icon { font-size: 2rem; }
         .action-btn span { font-weight: 700; font-size: 1rem; text-align: center; }
 
-        /* === سجل العمليات === */
-        .transactions-section h3 { margin-bottom: 20px; color: var(--gold); font-size: 1.4rem; }
-        .transaction-list { background: var(--bg-panel); border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
-        .transaction-item { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); transition: var(--transition); }
-        .transaction-item:hover { background: rgba(255,255,255,0.02); }
-        .transaction-item:last-child { border-bottom: none; }
-        .trans-info { display: flex; align-items: center; gap: 15px; }
-        .trans-icon { width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
-        .icon-income { background: rgba(16, 185, 129, 0.1); color: var(--success); }
-        .icon-expense { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
-        .trans-desc h4 { font-size: 1.05rem; margin-bottom: 5px; }
-        .trans-desc p { font-size: 0.85rem; color: var(--text-muted); }
-        .trans-amount { font-weight: 900; font-size: 1.1rem; font-family: monospace; }
-        .amount-positive { color: var(--success); }
-        .amount-negative { color: var(--text-light); }
+        /* === المتجر (Store) === */
+        #store-screen { max-width: 1200px; margin: 0 auto; display: none; align-items: flex-start; justify-content: flex-start; }
+        .store-header { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; }
+        .store-header h2 { color: var(--gold); font-size: 2rem; }
+        .back-btn { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 8px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .back-btn:hover { background: var(--gold); color: var(--bg-dark); }
+        
+        .store-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; width: 100%; }
+        .store-item { background: var(--bg-panel); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 20px; text-align: center; transition: var(--transition); display: flex; flex-direction: column; justify-content: space-between; }
+        .store-item:hover { border-color: var(--gold); box-shadow: 0 10px 20px rgba(251, 191, 36, 0.15); transform: translateY(-5px); }
+        .store-icon { font-size: 4rem; margin-bottom: 15px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.1)); }
+        .store-item h3 { color: var(--text-light); margin-bottom: 10px; font-size: 1.2rem; }
+        .store-item p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px; line-height: 1.4; }
+        .store-price { font-size: 1.5rem; font-weight: 900; color: var(--gold); margin-bottom: 15px; font-family: 'Cinzel', serif; }
+        .buy-btn { background: rgba(251, 191, 36, 0.1); border: 1px solid var(--gold); color: var(--gold); padding: 10px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; transition: var(--transition); }
+        .buy-btn:hover { background: var(--gold); color: var(--bg-dark); }
+
+        /* === لوحة الإدارة (Admin Panel) === */
+        #admin-screen { max-width: 1200px; margin: 0 auto; display: none; align-items: flex-start; justify-content: flex-start; }
+        .admin-header { width: 100%; text-align: center; border-bottom: 2px solid var(--danger); padding-bottom: 20px; margin-bottom: 30px; }
+        .admin-header h1 { color: var(--danger); font-size: 2.5rem; letter-spacing: 2px; text-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+        
+        .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; width: 100%; }
+        @media (max-width: 768px) { .admin-grid { grid-template-columns: 1fr; } }
+        .admin-box { background: var(--bg-panel); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 25px; }
+        .admin-box h3 { color: var(--gold); margin-bottom: 20px; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 10px; }
+        
+        .loan-request-card { background: rgba(0,0,0,0.3); border-left: 3px solid var(--gold); padding: 15px; margin-bottom: 15px; border-radius: 8px; }
+        [dir="ltr"] .loan-request-card { border-left: none; border-right: 3px solid var(--gold); }
+        .loan-req-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .loan-req-name { font-weight: bold; color: var(--text-light); }
+        .loan-req-amount { color: var(--gold); font-weight: 900; font-family: monospace; }
+        .loan-actions { display: flex; gap: 10px; margin-top: 10px; }
+        .loan-actions button { flex: 1; padding: 8px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
 
         /* === القائمة الجانبية (Sidebar) === */
         .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; opacity: 0; visibility: hidden; transition: var(--transition); backdrop-filter: blur(5px); }
         .sidebar-overlay.active { opacity: 1; visibility: visible; }
-        
         .sidebar { position: fixed; top: 0; right: 0; width: 300px; height: 100%; background: var(--bg-dark); border-left: 1px solid var(--gold); z-index: 1001; transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
         [dir="ltr"] .sidebar { right: auto; left: 0; border-left: none; border-right: 1px solid var(--gold); transform: translateX(-100%); }
         .sidebar.open { transform: translateX(0); }
-        
         .sidebar-header { padding: 30px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: center; position: relative; }
         .close-sidebar { position: absolute; top: 15px; right: 20px; background: transparent; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; }
         [dir="ltr"] .close-sidebar { right: auto; left: 20px; }
-        
         .sidebar-menu { list-style: none; padding: 20px 0; flex: 1; }
         .sidebar-menu li a { display: flex; align-items: center; gap: 15px; padding: 15px 25px; color: var(--text-light); text-decoration: none; font-size: 1.1rem; transition: var(--transition); border-left: 3px solid transparent; }
         [dir="ltr"] .sidebar-menu li a { border-left: none; border-right: 3px solid transparent; }
         .sidebar-menu li a:hover { background: rgba(251, 191, 36, 0.05); border-color: var(--gold); color: var(--gold); }
-        
         .sidebar-footer { padding: 20px; border-top: 1px solid rgba(255,255,255,0.05); }
         .logout-side-btn { width: 100%; background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: var(--transition); }
         .logout-side-btn:hover { background: var(--danger); color: white; }
@@ -197,32 +190,25 @@
         .modal.active { opacity: 1; visibility: visible; }
         .modal-content { background: var(--bg-panel); width: 90%; max-width: 450px; border-radius: 20px; border: 1px solid var(--gold); padding: 30px; position: relative; transform: scale(0.9); transition: var(--transition); }
         .modal.active .modal-content { transform: scale(1); }
-        
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
         .modal-header h3 { color: var(--gold); font-size: 1.4rem; }
         .close-modal { background: transparent; border: none; color: var(--danger); font-size: 1.5rem; cursor: pointer; }
-        
-        .detail-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed rgba(255,255,255,0.05); }
-        .detail-row span:first-child { color: var(--text-muted); }
-        .detail-row span:last-child { font-weight: bold; color: var(--text-light); }
-
     </style>
 </head>
 <body>
 
-    <!-- === شاشة التحميل === -->
     <div id="loader">
         <div class="axe-logo">
-            <svg viewBox="0 0 24 24">
-                <path d="M14.5 17.5L3 6m0 0l2.5-2.5L12 10m-9-4v5l4 4m11.5 2.5L21 6m0 0l-2.5-2.5L12 10m9-4v5l-4 4M12 10v11"/>
+            <svg viewBox="0 0 100 100">
+                <path d="M45,10 L55,10 L55,90 L45,90 Z M45,30 C20,20 10,40 10,50 C10,60 20,80 45,70 Z M55,30 C80,20 90,40 90,50 C90,60 80,80 55,70 Z" />
+                <circle cx="50" cy="50" r="5" fill="var(--bg-dark)"/>
             </svg>
         </div>
         <h1 class="loader-title viking-title" data-i18n="bankName">بنك الفايكنج</h1>
         <div class="loader-bar"><div class="loader-fill"></div></div>
     </div>
 
-    <!-- === شاشة تسجيل الدخول === -->
-    <div id="login-screen">
+    <div id="login-screen" class="active">
         <button class="lang-switch" onclick="toggleLanguage()" id="langBtn">English</button>
         
         <div class="login-card">
@@ -240,10 +226,10 @@
             </div>
             
             <button class="btn-primary" onclick="handleLogin()" data-i18n="loginBtn">تسجيل الدخول</button>
+            <p style="margin-top:15px; font-size:0.8rem; color:var(--text-muted);">للإدارة: Odin / Ragnarok</p>
         </div>
     </div>
 
-    <!-- === القائمة الجانبية (Sidebar) === -->
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
     <div class="sidebar" id="sidebar">
         <button class="close-sidebar" onclick="closeSidebar()">✖</button>
@@ -255,17 +241,13 @@
         <ul class="sidebar-menu">
             <li><a href="#" onclick="openModal('detailsModal'); closeSidebar();">📜 <span data-i18n="accDetails">تفاصيل حسابك البنكي</span></a></li>
             <li><a href="#" onclick="openModal('passwordModal'); closeSidebar();">🗝️ <span data-i18n="changePass">تغيير ختم المرور </span></a></li>
-            <li><a href="#" onclick="alert('سيتم إضافة نظام أسطول السفن قريباً!'); closeSidebar();">⛵ <span data-i18n="myFleet">مصاريفك من الحساب</span></a></li>
         </ul>
         <div class="sidebar-footer">
             <button class="logout-side-btn" onclick="handleLogout()" data-i18n="logout">الانسحاب من القاعة (خروج)</button>
         </div>
     </div>
 
-    <!-- === واجهة البنك الأساسية === -->
     <div id="dashboard-screen">
-        
-        <!-- الشريط العلوي -->
         <header class="top-nav">
             <div class="nav-right">
                 <button class="menu-btn" onclick="openSidebar()">☰</button>
@@ -278,310 +260,356 @@
                 </div>
             </div>
             <div class="nav-left">
-                <div class="raven-bell" title="إشعارات الأودين" onclick="alert('لا توجد رسائل جديدة من الغراب.')">🐦‍⬛</div>
+                <button class="lang-switch" style="position:static;" onclick="toggleLanguage()" id="langBtnIn">English</button>
             </div>
         </header>
 
-        <!-- قسم العروض الحصرية (ميزة جديدة) -->
         <div class="offers-banner">
             <div class="offer-text">
                 <h3 data-i18n="offerTitle">🔥 غنائم حصرية (عروض خاصة)</h3>
-                <p data-i18n="offerDesc"> استثمر في العروض الحصرية.</p>
+                <p data-i18n="offerDesc">استثمر في بناء سفن دراكار الجديدة واحصل على عوائد.</p>
             </div>
             <button class="offer-btn" onclick="alert('تم تسجيل اهتمامك، سيتواصل معك حكيم القرية!')" data-i18n="offerBtn">استثمر الآن</button>
         </div>
 
-        <!-- بطاقة الرصيد -->
         <section class="bank-card">
             <div class="card-label" data-i18n="totalBalance">ثروتك في الخزينة (الرصيد)</div>
-            <div class="card-balance">9,540.00 <span style="font-size:1.5rem; color:var(--text-muted);">G</span></div>
+            <div class="card-balance"><span id="user-balance">5000</span> <span style="font-size:1.5rem; color:var(--text-muted);">G</span></div>
             
             <div class="card-details">
                 <div>
                     <div class="card-label" data-i18n="accNumber">رقم المخطوطة (الحساب)</div>
-                    <div class="account-number">VK-8842-XXXX-1993</div>
+                    <div class="account-number">VK-8842-1993</div>
                 </div>
                 <div class="account-status" data-i18n="activeAcc">محارب موثّق</div>
             </div>
         </section>
 
-        <!-- أزرار الإجراءات السريعة -->
         <section class="action-grid">
-            <div class="action-btn" onclick="alert('سيتم برمجة المتجر لاحقاً!')">
+            <div class="action-btn" onclick="switchScreen('store-screen')">
                 <div class="action-icon">🛒</div>
-                <span data-i18n="store">متجر المحاربين</span>
+                <span data-i18n="store">متجر العتاد</span>
             </div>
-            <div class="action-btn" onclick="alert('نظام التحويل قيد التطوير!')">
+            <div class="action-btn" onclick="openModal('transferModal')">
                 <div class="action-icon">💸</div>
-                <span data-i18n="transfer">نقل الغنائم </span>
+                <span data-i18n="transfer">نقل الغنائم (تحويل)</span>
             </div>
-            <!-- زر طلب الديون يفتح نافذة -->
             <div class="action-btn" onclick="openModal('loanModal')">
                 <div class="action-icon">📜</div>
-                <span data-i18n="requestLoan">طلب تمويل غزوة (سلفية)</span>
-            </div>
-        </section>
-
-        <!-- سجل الحركات المالية -->
-        <section class="transactions-section">
-            <h3 data-i18n="recentTrans">سجل المعارك والمعاملات</h3>
-            <div class="transaction-list">
-                <div class="transaction-item">
-                    <div class="trans-info">
-                        <div class="trans-icon icon-income">⚔️</div>
-                        <div class="trans-desc">
-                            <h4 data-i18n="trans1Title">غنائم غزوة بحرية</h4>
-                            <p data-i18n="trans1Date">اليوم، 10:30 صباحاً</p>
-                        </div>
-                    </div>
-                    <div class="trans-amount amount-positive">+ 1,200.00 G</div>
-                </div>
-                <div class="transaction-item">
-                    <div class="trans-info">
-                        <div class="trans-icon icon-expense">🛡️</div>
-                        <div class="trans-desc">
-                            <h4 data-i18n="trans2Title">شراء دروع قتالية</h4>
-                            <p data-i18n="trans2Date">أمس، 04:15 عصراً</p>
-                        </div>
-                    </div>
-                    <div class="trans-amount amount-negative">- 350.00 G</div>
-                </div>
-                <div class="transaction-item">
-                    <div class="trans-info">
-                        <div class="trans-icon icon-income">💰</div>
-                        <div class="trans-desc">
-                            <h4 data-i18n="trans3Title">مكافأة مجلس الحكماء</h4>
-                            <p data-i18n="trans3Date">منذ 3 أيام</p>
-                        </div>
-                    </div>
-                    <div class="trans-amount amount-positive">+ 500.00 G</div>
-                </div>
+                <span data-i18n="requestLoan">طلب تمويل غزوة (قرض)</span>
             </div>
         </section>
     </div>
 
-    <!-- === النوافذ المنبثقة (Modals) === -->
-    
-    <!-- 1. نافذة تفاصيل الحساب -->
-    <div class="modal" id="detailsModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 data-i18n="accDetails">مخطوطة الحساب (التفاصيل)</h3>
-                <button class="close-modal" onclick="closeModal('detailsModal')">✖</button>
+    <div id="store-screen">
+        <div class="store-header">
+            <h2 class="viking-title">متجر فالهالا للعتاد 🛒</h2>
+            <button class="back-btn" onclick="switchScreen('dashboard-screen')">العودة للبنك ↩</button>
+        </div>
+        <div class="store-grid" id="store-grid">
             </div>
-            <div class="detail-row">
-                <span data-i18n="username">الاسم</span>
-                <span id="detailName">مقاتل</span>
+    </div>
+
+    <div id="admin-screen">
+        <div class="admin-header">
+            <h1 class="viking-title">قاعة فالهالا للإدارة 👑</h1>
+            <p style="color:var(--text-muted); margin-top:10px;">تحكم في مصائر المحاربين، وافق على ديونهم، وأدر غنائم المتجر.</p>
+            <button class="back-btn" style="margin-top:20px; border-color:var(--danger); color:var(--danger);" onclick="handleLogout()">إغلاق القاعة (تسجيل خروج) ✖</button>
+        </div>
+        
+        <div class="admin-grid">
+            <div class="admin-box">
+                <h3>📜 طلبات تمويل الغزوات (القروض)</h3>
+                <div id="admin-loans-list">
+                    </div>
             </div>
-            <div class="detail-row">
-                <span data-i18n="accNumber">رقم الحساب</span>
-                <span>VK-8842-XXXX-1993</span>
+            
+            <div class="admin-box">
+                <h3>🛒 صياغة عتاد جديد (إضافة للمتجر)</h3>
+                <div class="input-group">
+                    <label>أيقونة السلعة (إيموجي)</label>
+                    <input type="text" id="newItemIcon" placeholder="مثال: ⚔️" value="⚔️">
+                </div>
+                <div class="input-group">
+                    <label>اسم السلعة</label>
+                    <input type="text" id="newItemName" placeholder="مثال: سيف أودين...">
+                </div>
+                <div class="input-group">
+                    <label>وصف السلعة</label>
+                    <textarea id="newItemDesc" rows="2" placeholder="وصف قصير..."></textarea>
+                </div>
+                <div class="input-group">
+                    <label>السعر (ذهب)</label>
+                    <input type="number" id="newItemPrice" placeholder="مثال: 1500">
+                </div>
+                <button class="btn-primary btn-success" onclick="adminAddStoreItem()">إضافة إلى المتجر ✅</button>
             </div>
-            <div class="detail-row">
-                <span data-i18n="rankTitle">الرتبة</span>
-                <span>يارل (Jarl)</span>
-            </div>
-            <div class="detail-row">
-                <span>تاريخ الانضمام</span>
-                <span>2026/06/28</span>
-            </div>
-            <button class="btn-primary" onclick="closeModal('detailsModal')">إغلاق</button>
         </div>
     </div>
 
-    <!-- 2. نافذة تغيير الرمز السري -->
-    <div class="modal" id="passwordModal">
+    <div class="modal" id="transferModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 data-i18n="changePass">تغيير ختم المرور (الرمز السري)</h3>
-                <button class="close-modal" onclick="closeModal('passwordModal')">✖</button>
+                <h3 data-i18n="transfer">نقل الغنائم (تحويل)</h3>
+                <button class="close-modal" onclick="closeModal('transferModal')">✖</button>
             </div>
             <div class="input-group">
-                <label>الرمز السري الحالي</label>
-                <input type="password" placeholder="أدخل الرمز القديم...">
+                <label>اسم المحارب المُستلم</label>
+                <input type="text" placeholder="اسم المحارب...">
             </div>
             <div class="input-group">
-                <label>الرمز السري الجديد</label>
-                <input type="password" placeholder="الرمز الجديد...">
+                <label>المبلغ (G)</label>
+                <input type="number" id="transferAmount" placeholder="مثال: 500">
             </div>
-            <button class="btn-primary" onclick="alert('تم تحديث الرمز السري بنجاح!'); closeModal('passwordModal');">حفظ التغييرات</button>
+            <button class="btn-primary" onclick="processTransfer()">إرسال الغنائم 💸</button>
         </div>
     </div>
 
-    <!-- 3. نافذة طلب سلفية / دين -->
     <div class="modal" id="loanModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 data-i18n="requestLoan">طلب تمويل غزوة (سلفية)</h3>
+                <h3 data-i18n="requestLoan">طلب تمويل غزوة</h3>
                 <button class="close-modal" onclick="closeModal('loanModal')">✖</button>
             </div>
-            <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:15px;">اطلب دعماً مالياً من خزينة الفايكنج المركزية لتجهيز عتادك.</p>
             <div class="input-group">
                 <label>المبلغ المطلوب (ذهب)</label>
-                <input type="number" placeholder="مثال: 5000">
+                <input type="number" id="loanAmountInput" placeholder="مثال: 5000">
             </div>
             <div class="input-group">
                 <label>سبب التمويل</label>
-                <select>
-                    <option>تجهيز سفن</option>
+                <select id="loanReasonInput">
+                    <option>تجهيز سفن دراكار</option>
                     <option>شراء أسلحة ودروع</option>
                     <option>تمويل طاقم المرتزقة</option>
-                    <option>أخرى</option>
                 </select>
             </div>
-            <button class="btn-primary" onclick="alert('تم إرسال طلب التمويل إلى مجلس الحكماء للموافقة!'); closeModal('loanModal');">تقديم الطلب</button>
+            <button class="btn-primary" onclick="submitLoanRequest()">تقديم الطلب للمجلس 📜</button>
         </div>
     </div>
 
     <script>
-        // === قاموس الترجمة الفورية ===
-        const translations = {
-            ar: {
-                bankName: "بنك الفايكنج",
-                loginDesc: "أدخل هويتك لدخول قاعة المجد المالية",
-                username: "الاسم أو اللقب",
-                password: "الرقم السري (رقم الهوية)",
-                loginBtn: "تسجيل الدخول",
-                welcome: "مرحباً، ",
-                rankTitle: "رتبة: يارل (Jarl)",
-                logout: "الانسحاب من القاعة (خروج)",
-                accDetails: "مخطوطة الحساب (التفاصيل)",
-                changePass: "تغيير ختم المرور (الرمز السري)",
-                myFleet: "أسطول الغزو الخاص بي",
-                offerTitle: "🔥 غنائم حصرية (عروض استثمارية)",
-                offerDesc: "استثمر في بناء سفن 'الدراكار' الجديدة للغزوة القادمة واحصل على عوائد تصل لـ 20%.",
-                offerBtn: "استثمر الآن",
-                totalBalance: "ثروتك في الخزينة (الرصيد)",
-                accNumber: "رقم المخطوطة (الحساب)",
-                activeAcc: "محارب موثّق",
-                store: "متجر العتاد",
-                transfer: "نقل الغنائم (تحويل)",
-                requestLoan: "طلب تمويل غزوة (سلفية)",
-                recentTrans: "سجل المعارك والمعاملات",
-                trans1Title: "غنائم غزوة بحرية",
-                trans1Date: "اليوم، 10:30 صباحاً",
-                trans2Title: "شراء دروع قتالية",
-                trans2Date: "أمس، 04:15 عصراً",
-                trans3Title: "مكافأة مجلس الحكماء",
-                trans3Date: "منذ 3 أيام"
-            },
-            en: {
-                bankName: "Viking Bank",
-                loginDesc: "Enter your identity to access the Hall of Wealth",
-                username: "Username or Title",
-                password: "Password (ID Number)",
-                loginBtn: "Enter Valhalla",
-                welcome: "Hail, ",
-                rankTitle: "Rank: Jarl",
-                logout: "Retreat (Logout)",
-                accDetails: "Warrior's Scroll (Details)",
-                changePass: "Change Seal (Password)",
-                myFleet: "My Raid Fleet",
-                offerTitle: "🔥 Exclusive Loot (Investments)",
-                offerDesc: "Invest in building new 'Drakkar' ships for the next raid and get up to 20% returns.",
-                offerBtn: "Invest Now",
-                totalBalance: "Vault Wealth (Balance)",
-                accNumber: "Scroll Number (Account)",
-                activeAcc: "Verified Warrior",
-                store: "Armory Store",
-                transfer: "Transfer Loot",
-                requestLoan: "Request Raid Funding (Loan)",
-                recentTrans: "Battle & Transaction Log",
-                trans1Title: "Naval Raid Loot",
-                trans1Date: "Today, 10:30 AM",
-                trans2Title: "Combat Shields Bought",
-                trans2Date: "Yesterday, 04:15 PM",
-                trans3Title: "Elders Council Reward",
-                trans3Date: "3 Days ago"
-            }
-        };
+        // === قاعدة البيانات الوهمية (LocalStorage) ===
+        let currentUser = "";
+        let userBalance = parseInt(localStorage.getItem('vikingBalance')) || 5000;
+        
+        let storeItems = JSON.parse(localStorage.getItem('vikingStore')) || [
+            { id: 1, icon: '🛡️', name: 'درع إسكندنافي فولاذي', desc: 'درع قوي يصد ضربات الأعداء في ساحة المعركة.', price: 450 },
+            { id: 2, icon: '⛵', name: 'سفينة دراكار خفيفة', desc: 'سفينة سريعة تتسع لـ 30 محارباً للغزوات الخاطفة.', price: 3000 },
+            { id: 3, icon: '🪓', name: 'فأس الجليد', desc: 'فأس حاد كشفرة الجليد، يزيد من هيبتك في القتال.', price: 850 }
+        ];
 
-        let currentLang = 'ar';
+        let loanRequests = JSON.parse(localStorage.getItem('vikingLoans')) || [];
+
+        // === تحديث الواجهة ===
+        function updateUIBalance() {
+            document.getElementById('user-balance').innerText = userBalance.toLocaleString();
+            localStorage.setItem('vikingBalance', userBalance);
+        }
+
+        // === التنقل بين الشاشات ===
+        function switchScreen(screenId) {
+            document.querySelectorAll('#login-screen, #dashboard-screen, #store-screen, #admin-screen').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+            
+            if(screenId === 'store-screen') renderStore();
+            if(screenId === 'admin-screen') renderAdminLoans();
+            if(screenId === 'dashboard-screen') updateUIBalance();
+        }
 
         // 1. إخفاء شاشة التحميل بعد 2.5 ثانية
         window.addEventListener('load', () => {
             setTimeout(() => { document.getElementById('loader').classList.add('hidden'); }, 2500);
+            updateUIBalance();
         });
 
-        // 2. نظام تغيير اللغة
-        function toggleLanguage() {
-            currentLang = currentLang === 'ar' ? 'en' : 'ar';
-            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
-            document.documentElement.lang = currentLang;
-            document.getElementById('langBtn').innerText = currentLang === 'ar' ? 'English' : 'عربي';
-
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[currentLang][key]) {
-                    if (key === 'welcome') {
-                        const name = document.getElementById('display-name').innerText;
-                        el.innerHTML = translations[currentLang][key] + `<span id="display-name">${name}</span>`;
-                    } else {
-                        el.innerText = translations[currentLang][key];
-                    }
-                }
-            });
-        }
-
-        // 3. نظام تسجيل الدخول
+        // 2. نظام تسجيل الدخول (مع شفرة الإدارة)
         function handleLogin() {
             const user = document.getElementById('username').value.trim();
             const pass = document.getElementById('password').value.trim();
 
-            if(user === "" || pass === "") {
-                alert(currentLang === 'ar' ? "يرجى إدخال الاسم والرقم السري!" : "Please enter username and password!");
+            if(user === "" || pass === "") { alert("يرجى إدخال البيانات!"); return; }
+
+            // شفرة الإدارة السرية 👑
+            if(user.toLowerCase() === 'odin' && pass === 'Ragnarok') {
+                switchScreen('admin-screen');
                 return;
             }
 
+            // مستخدم عادي
+            currentUser = user;
             document.getElementById('display-name').innerText = user;
             document.getElementById('sidebar-name').innerText = user;
-            document.getElementById('detailName').innerText = user;
-
-            const loginScreen = document.getElementById('login-screen');
-            const dashboardScreen = document.getElementById('dashboard-screen');
-
-            loginScreen.style.opacity = '0';
-            setTimeout(() => {
-                loginScreen.style.display = 'none';
-                dashboardScreen.style.display = 'block';
-                setTimeout(() => { dashboardScreen.style.opacity = '1'; }, 50);
-            }, 500);
+            
+            switchScreen('dashboard-screen');
         }
 
         function handleLogout() {
             closeSidebar();
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
-            
-            const loginScreen = document.getElementById('login-screen');
-            const dashboardScreen = document.getElementById('dashboard-screen');
-
-            dashboardScreen.style.opacity = '0';
-            setTimeout(() => {
-                dashboardScreen.style.display = 'none';
-                loginScreen.style.display = 'flex';
-                setTimeout(() => { loginScreen.style.opacity = '1'; }, 50);
-            }, 500);
+            switchScreen('login-screen');
         }
 
-        // 4. التحكم في القائمة الجانبية (Sidebar)
+        // === نظام المتجر (Store) ===
+        function renderStore() {
+            const grid = document.getElementById('store-grid');
+            grid.innerHTML = '';
+            storeItems.forEach(item => {
+                grid.innerHTML += `
+                    <div class="store-item">
+                        <div class="store-icon">${item.icon}</div>
+                        <h3>${item.name}</h3>
+                        <p>${item.desc}</p>
+                        <div class="store-price">${item.price.toLocaleString()} G</div>
+                        <button class="buy-btn" onclick="buyStoreItem(${item.id}, ${item.price})">شراء العتاد 💰</button>
+                    </div>
+                `;
+            });
+        }
+
+        function buyStoreItem(id, price) {
+            if (userBalance >= price) {
+                userBalance -= price;
+                updateUIBalance();
+                alert("تم شراء العتاد بنجاح! تجهز للغزوة القادمة. ⚔️");
+            } else {
+                alert("خزينتك لا تكفي لشراء هذا العتاد! اذهب للغزو أو اطلب قرضاً. ⛔");
+            }
+        }
+
+        // === نظام التحويل ===
+        function processTransfer() {
+            const amount = parseInt(document.getElementById('transferAmount').value);
+            if (!amount || amount <= 0) { alert("أدخل مبلغاً صحيحاً!"); return; }
+            if (amount > userBalance) { alert("رصيدك لا يكفي للتحويل!"); return; }
+            
+            userBalance -= amount;
+            updateUIBalance();
+            alert(`تم تحويل ${amount} G بنجاح للمحارب المختار! 💸`);
+            closeModal('transferModal');
+            document.getElementById('transferAmount').value = '';
+        }
+
+        // === نظام القروض للأعضاء ===
+        function submitLoanRequest() {
+            const amount = parseInt(document.getElementById('loanAmountInput').value);
+            const reason = document.getElementById('loanReasonInput').value;
+
+            if (!amount || amount <= 0) { alert("أدخل مبلغاً صحيحاً!"); return; }
+
+            loanRequests.push({
+                id: Date.now(),
+                user: currentUser,
+                amount: amount,
+                reason: reason
+            });
+            
+            localStorage.setItem('vikingLoans', JSON.stringify(loanRequests));
+            alert("تم إرسال طلب التمويل إلى مجلس الحكماء للموافقة! 📜");
+            closeModal('loanModal');
+            document.getElementById('loanAmountInput').value = '';
+        }
+
+        // === نظام الإدارة السري (Super Admin) ===
+        function renderAdminLoans() {
+            const list = document.getElementById('admin-loans-list');
+            list.innerHTML = '';
+            
+            if (loanRequests.length === 0) {
+                list.innerHTML = '<p style="color:var(--text-muted); text-align:center;">لا توجد طلبات تمويل حالياً.</p>';
+                return;
+            }
+
+            loanRequests.forEach(req => {
+                list.innerHTML += `
+                    <div class="loan-request-card">
+                        <div class="loan-req-header">
+                            <span class="loan-req-name">المحارب: ${req.user}</span>
+                            <span class="loan-req-amount">${req.amount.toLocaleString()} G</span>
+                        </div>
+                        <p style="font-size:0.85rem; color:var(--text-muted);">السبب: ${req.reason}</p>
+                        <div class="loan-actions">
+                            <button class="btn-success" onclick="approveLoan(${req.id}, ${req.amount})">موافقة وتمويل ✅</button>
+                            <button class="btn-danger" onclick="rejectLoan(${req.id})">رفض الطلب ❌</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function approveLoan(id, amount) {
+            // إضافة المبلغ لرصيد المستخدم محلياً (محاكاة)
+            userBalance += amount; 
+            updateUIBalance();
+            
+            // حذف الطلب
+            loanRequests = loanRequests.filter(req => req.id !== id);
+            localStorage.setItem('vikingLoans', JSON.stringify(loanRequests));
+            renderAdminLoans();
+            alert("تمت الموافقة وتمويل المحارب بنجاح! 💰");
+        }
+
+        function rejectLoan(id) {
+            loanRequests = loanRequests.filter(req => req.id !== id);
+            localStorage.setItem('vikingLoans', JSON.stringify(loanRequests));
+            renderAdminLoans();
+        }
+
+        function adminAddStoreItem() {
+            const icon = document.getElementById('newItemIcon').value;
+            const name = document.getElementById('newItemName').value;
+            const desc = document.getElementById('newItemDesc').value;
+            const price = parseInt(document.getElementById('newItemPrice').value);
+
+            if(!name || !price) { alert("يرجى تعبئة اسم السلعة والسعر!"); return; }
+
+            storeItems.push({ id: Date.now(), icon, name, desc, price });
+            localStorage.setItem('vikingStore', JSON.stringify(storeItems));
+            
+            alert("تم صياغة العتاد وإضافته للمتجر بنجاح! 🛒");
+            
+            document.getElementById('newItemIcon').value = '⚔️';
+            document.getElementById('newItemName').value = '';
+            document.getElementById('newItemDesc').value = '';
+            document.getElementById('newItemPrice').value = '';
+        }
+
+        // === التحكم في النوافذ (Modals & Sidebar) ===
         function openSidebar() {
             document.getElementById('sidebar').classList.add('open');
             document.getElementById('sidebarOverlay').classList.add('active');
         }
-
         function closeSidebar() {
             document.getElementById('sidebar').classList.remove('open');
             document.getElementById('sidebarOverlay').classList.remove('active');
         }
+        function openModal(modalId) { document.getElementById(modalId).classList.add('active'); }
+        function closeModal(modalId) { document.getElementById(modalId).classList.remove('active'); }
 
-        // 5. التحكم في النوافذ المنبثقة (Modals)
-        function openModal(modalId) {
-            document.getElementById(modalId).classList.add('active');
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
+        // === الترجمة البسيطة (i18n) ===
+        const translations = {
+            ar: {
+                bankName: "بنك الفايكنج", loginDesc: "أدخل هويتك لدخول حسابك البنكي", username: "الاسم أو اللقب", password: "الرقم السري (رقم الهوية)", loginBtn: "تسجيل الدخول", welcome: "مرحباً، ", rankTitle: "رتبة: يارل (Jarl)", logout: "الانسحاب من القاعة (خروج)", accDetails: "تفاصيل حسابك البنكي", changePass: "تغيير ختم المرور", myFleet: "مصاريفك من الحساب", offerTitle: "🔥 غنائم حصرية (عروض خاصة)", offerDesc: "استثمر في العروض الحصرية.", offerBtn: "استثمر الآن", totalBalance: "ثروتك في الخزينة (الرصيد)", accNumber: "رقم المخطوطة (الحساب)", activeAcc: "محارب موثّق", store: "متجر العتاد", transfer: "نقل الغنائم (تحويل)", requestLoan: "طلب تمويل غزوة (سلفية)", recentTrans: "سجل المعارك والمعاملات", trans1Title: "غنائم غزوة بحرية", trans1Date: "اليوم، 10:30 صباحاً", trans2Title: "شراء دروع قتالية", trans2Date: "أمس، 04:15 عصراً", trans3Title: "مكافأة مجلس الحكماء", trans3Date: "منذ 3 أيام"
+            },
+            en: {
+                bankName: "Viking Bank", loginDesc: "Enter your identity to access your account", username: "Username or Title", password: "Password (ID)", loginBtn: "Enter Valhalla", welcome: "Hail, ", rankTitle: "Rank: Jarl", logout: "Retreat (Logout)", accDetails: "Account Details", changePass: "Change Password", myFleet: "Account Expenses", offerTitle: "🔥 Exclusive Loot", offerDesc: "Invest in exclusive offers.", offerBtn: "Invest Now", totalBalance: "Vault Wealth (Balance)", accNumber: "Account Number", activeAcc: "Verified Warrior", store: "Armory Store", transfer: "Transfer Loot", requestLoan: "Request Loan", recentTrans: "Battle & Transaction Log", trans1Title: "Naval Raid Loot", trans1Date: "Today, 10:30 AM", trans2Title: "Combat Shields Bought", trans2Date: "Yesterday, 04:15 PM", trans3Title: "Elders Reward", trans3Date: "3 Days ago"
+            }
+        };
+        let currentLang = 'ar';
+        function toggleLanguage() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.documentElement.lang = currentLang;
+            document.querySelectorAll('.lang-switch').forEach(btn => btn.innerText = currentLang === 'ar' ? 'English' : 'عربي');
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang][key]) {
+                    if (key === 'welcome') el.innerHTML = translations[currentLang][key] + `<span id="display-name">${document.getElementById('display-name').innerText}</span>`;
+                    else el.innerText = translations[currentLang][key];
+                }
+            });
         }
     </script>
 </body>
