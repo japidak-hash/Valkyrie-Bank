@@ -629,13 +629,17 @@
             };
 
             fetch(SCRIPT_URL, { 
+                redirect: 'follow', // هذا هو السطر السحري الجديد الذي يمنع الحظر
                 method: 'POST', 
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                 body: JSON.stringify(payload) 
             })
             .then(res => res.json())
             .then(res => { if(syncStatus) { syncStatus.innerText = '🟢 متصل بالسحابة (تم الحفظ)'; setTimeout(()=>syncStatus.style.display='none', 3000); }})
-            .catch(err => { if(syncStatus) syncStatus.innerText = '🔴 خطأ في الاتصال'; });
+            .catch(err => { 
+                console.error("Fetch Error:", err);
+                if(syncStatus) syncStatus.innerText = '🔴 خطأ في الاتصال (تأكد من إعدادات جوجل)'; 
+            });
         }
 
         window.addEventListener('load', async () => {
